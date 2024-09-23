@@ -1,5 +1,7 @@
 package ru.otus.otuskotlin.coroutines.homework.hard
 
+import kotlinx.coroutines.*
+import ru.otus.otuskotlin.coroutines.homework.hard.dto.Dictionary
 import java.io.File
 import kotlin.test.Test
 
@@ -30,11 +32,23 @@ class HWHard {
         dictionaryApi: DictionaryApi,
         words: Set<String>,
         @Suppress("SameParameterValue") locale: Locale
-    ) =
+    ): List<Dictionary?> {
         // make some suspensions and async
-        words.map {
-            dictionaryApi.findWord(locale, it)
+        val result:List<Dictionary?>
+
+        runBlocking {
+            val deferredResults = words.map { word ->
+                async (Dispatchers.IO) {
+                    dictionaryApi.findWord(locale, word)
+                }
+            }
+
+            result = deferredResults.awaitAll()
         }
+
+        return result
+    }
+
 
     object FileReader {
         fun readFile(): String =
