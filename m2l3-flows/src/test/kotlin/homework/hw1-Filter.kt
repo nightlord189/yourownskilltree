@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import java.math.BigDecimal
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 /**
  * Задание.
@@ -25,9 +26,12 @@ class Exercise1Filter {
         val res = LIST
             .asFlow()
             .run { flt.title?.let { t -> this.filter { it.title == t } } ?: this }
+            .run { flt.type?.let { t -> this.filter { it.type == t } } ?: this }
+            .run { flt.visibilitiesOr?.let { t -> this.filter { it.visibility in t } } ?: this }
+            .run { flt.priceMin?.let { t -> this.filter { it.price >= t } } ?: this }
             .toList()
-//        assertEquals(1, res.size)
-//        assertEquals("5", res.first().id)
+        assertEquals(1, res.size)
+        assertEquals("5", res.first().id)
     }
 
     companion object {
@@ -57,7 +61,7 @@ class Exercise1Filter {
             Ad("4", "носок", AdVisibility.OWNER, BigDecimal("40.13"), AdType.DEMAND),
             Ad("5", "шнурки", AdVisibility.OWNER, BigDecimal("40.13"), AdType.DEMAND),
             Ad("6", "шнурки", AdVisibility.OWNER, BigDecimal("40.13"), AdType.SUPPLY),
-            Ad("7", "шнурки", AdVisibility.GROUP, BigDecimal("40.13"), AdType.DEMAND),
+            Ad("7", "шнурки", AdVisibility.GROUP, BigDecimal("5.0"), AdType.DEMAND),
         )
     }
 }
