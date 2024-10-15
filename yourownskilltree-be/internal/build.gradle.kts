@@ -5,7 +5,6 @@ plugins {
 }
 
 application {
-    // Указать главный класс
     mainClass.set("org.aburavov.yourownskilltree.backend.internal.MainKt")
 }
 
