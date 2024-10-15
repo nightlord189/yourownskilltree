@@ -16,7 +16,7 @@ YourOwnSkillTree - сервис для визуализации собствен
 2. Аналитика
     1. [Функциональные требования](./docs/functional-requirements.md)
     2. [Нефункциональные требования](./docs/non-functional-requirements.md)
-3. DevOps
+3. [DevOps](./docker-compose.yml)
 4. Архитектура
     1. [Описание API](./docs/api.md)
     2. [Схема](./docs/arch.png)
