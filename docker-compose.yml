@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: yourownskilltree-backend
+    depends_on:
+      - db
+      - opensearch
+      - keycloak
+    ports:
+      - "8080:8080"  # Порт приложения, если используется HTTP
+
+  db:
+    image: postgres:15
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: yourownskilltree
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  opensearch:
+    image: opensearchproject/opensearch:2.10.0
+    container_name: opensearch
+    environment:
+      discovery.type: single-node
+      plugins.security.disabled: "true"
+      OPENSEARCH_JAVA_OPTS: "-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9600:9600"  # для мониторинга
+    volumes:
+      - opensearch_data:/usr/share/opensearch/data
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:22.0
+    container_name: keycloak
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      DB_VENDOR: POSTGRES
+      DB_ADDR: db
+      DB_DATABASE: yourownskilltree
+      DB_USER: postgres
+      DB_PASSWORD: 123456
+    command: start-dev
+    ports:
+      - "8081:8080"  # Порт для Keycloak
+
+volumes:
+  postgres_data:
+  opensearch_data:
