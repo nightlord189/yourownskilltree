@@ -1,7 +1,10 @@
 plugins {
-    id("build-jvm")
     kotlin("jvm") version "1.9.23"
     application
+}
+
+repositories {
+    mavenCentral()
 }
 
 application {
