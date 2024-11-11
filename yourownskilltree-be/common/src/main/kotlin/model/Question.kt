@@ -7,6 +7,6 @@ data class Question (
     val rightAnswer: String? = null
 )
 
-enum class QuestionType (val value: String) {
-    OPEN ("open"), CLOSED ("closed")
+enum class QuestionType {
+    OPEN, CLOSED
 }

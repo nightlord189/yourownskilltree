@@ -15,7 +15,7 @@ tags:
     description: Node of the skill tree
 
 paths:
-  /node:
+  /node/create:
     post:
       tags:
         - node
@@ -25,7 +25,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Node'
+              $ref: '#/components/schemas/NodeCreateRequest'
         required: true
       responses:
         '200':
@@ -33,86 +33,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NodeResponse'
+                $ref: '#/components/schemas/NodeCreateResponse'
         '400':
           description: Bad request
 
-    get:
+  /node/search:
+    post:
       tags:
         - node
-      summary: Get an array of nodes by filter
-      operationId: getNodes
-      parameters:
-        - name: parent_id
-          in: query
-          description: Returns children of a node
-          required: false
-          schema:
-            type: string
-            example: a8faeb94-eb05-44f8-888d-e8defb48e412
-        - name: name_like
-          in: query
-          description: Search by substring
-          required: false
-          schema:
-            type: string
-            example: "Learn"
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NodeArrayResponse'
-        '400':
-          description: Bad request
-        '404':
-          description: Not found
-
-  /node/{nodeId}:
-    get:
-      tags:
-        - node
-      summary: Get a single node
-      operationId: getNode
-      parameters:
-        - name: nodeId
-          in: path
-          description: ID of the node
-          required: true
-          schema:
-            type: string
-            example: a8faeb94-eb05-44f8-888d-e8defb48e412
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NodeResponse'
-        '400':
-          description: Bad request
-        '404':
-          description: Not found
-
-    put:
-      tags:
-        - node
-      summary: Update a node
-      operationId: updateNode
-      parameters:
-        - name: nodeId
-          in: path
-          description: ID of the node
-          required: true
-          schema:
-            type: string
-            example: a8faeb94-eb05-44f8-888d-e8defb48e412
+      summary: Get an array of nodes by search filter
+      operationId: searchNodes
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Node'
+              $ref: '#/components/schemas/NodeSearchRequest'
         required: true
       responses:
         '200':
@@ -120,37 +55,238 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NodeResponse'
+                $ref: '#/components/schemas/NodeSearchResponse'
         '400':
           description: Bad request
-        '404':
-          description: Not found
 
-    delete:
+  /node/read:
+    post:
       tags:
         - node
-      summary: Delete a node
-      operationId: deleteNode
-      parameters:
-        - name: nodeId
-          in: path
-          description: ID of the node
-          required: true
-          schema:
-            type: string
-            example: a8faeb94-eb05-44f8-888d-e8defb48e412
+      summary: Get a single node
+      operationId: getNode
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NodeReadRequest'
+        required: true
       responses:
         '200':
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NodeResponse'
+                $ref: '#/components/schemas/NodeReadResponse'
         '400':
           description: Bad request
+        '404':
+          description: Not found
+
+  /node/update:
+    post:
+      tags:
+        - node
+      summary: Update a node
+      operationId: updateNode
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NodeUpdateRequest'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NodeUpdateResponse'
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+
+  /node/delete:
+    post:
+      tags:
+        - node
+      summary: Delete a node
+      operationId: deleteNode
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NodeDeleteRequest'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NodeDeleteResponse'
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
 
 components:
   schemas:
+
+    IRequest:
+      type: object
+      description: Базовый интерфейс для всех запросов
+      properties:
+        requestType:
+          type: string
+          description: Поле-дискриминатор для вычисления типа запроса
+          example: create
+        debug:
+          $ref: '#/components/schemas/Debug'
+      discriminator:
+        propertyName: requestType
+        mapping:
+          create: '#/components/schemas/NodeCreateRequest'
+          read:   '#/components/schemas/NodeReadRequest'
+          update: '#/components/schemas/NodeUpdateRequest'
+          delete: '#/components/schemas/NodeDeleteRequest'
+          search: '#/components/schemas/NodeSearchRequest'
+
+    ResponseResult:
+      type: string
+      enum:
+        - success
+        - error
+
+    IResponse:
+      type: object
+      description: Базовый интерфейс для всех ответов
+      properties:
+        responseType:
+          type: string
+          description: Поле-дискриминатор для вычисления типа запроса
+          example: create
+        result:
+          $ref: '#/components/schemas/ResponseResult'
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              group:
+                type: string
+              field:
+                type: string
+              message:
+                type: string
+      discriminator:
+        propertyName: responseType
+        mapping:
+          create: '#/components/schemas/NodeCreateResponse'
+          read:   '#/components/schemas/NodeReadResponse'
+          update: '#/components/schemas/NodeUpdateResponse'
+          delete: '#/components/schemas/NodeDeleteResponse'
+          search: '#/components/schemas/NodeSearchResponse'
+
+    NodeCreateRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - type: object
+          properties:
+            node:
+              $ref: '#/components/schemas/BaseNode'
+
+    NodeUpdateRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - type: object
+          properties:
+            node:
+              $ref: '#/components/schemas/NodeWithId'
+
+    NodeReadRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - type: object
+          properties:
+            id:
+              type: string
+              example: a8faeb94-eb05-44f8-888d-e8defb48e412
+              description: ID of the node
+
+    NodeDeleteRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - type: object
+          properties:
+            id:
+              type: string
+              example: a8faeb94-eb05-44f8-888d-e8defb48e412
+              description: ID of the node
+
+    NodeSearchRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - type: object
+          properties:
+            filter:
+              type: object
+              properties:
+                parent_id:
+                  type: string
+                  description: Returns children of a node
+                  example: a8faeb94-eb05-44f8-888d-e8defb48e412
+                name_like:
+                  type: string
+                  description: Search by substring
+                  example: "Learn"
+
+    NodeResponseSingle:
+      allOf:
+        - type: object
+          description: Ответ с одним объектом узла
+          properties:
+            node:
+              $ref: '#/components/schemas/NodeWithId'
+
+    NodeResponseMulti:
+      allOf:
+        - type: object
+          description: Список найденных объектов
+          properties:
+            nodes:
+              type: array
+              items:
+                $ref: '#/components/schemas/NodeWithId'
+
+    NodeCreateResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/NodeResponseSingle'
+
+    NodeReadResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/NodeResponseSingle'
+
+    NodeUpdateResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/NodeResponseSingle'
+
+    NodeDeleteResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/NodeResponseSingle'
+
+    NodeSearchResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/NodeResponseMulti'
+
     Question:
       type: object
       description: question of the node for testing
@@ -170,14 +306,9 @@ components:
         right_answer:
           type: string
 
-    NodeArrayResponse:
-      type: array
-      items:
-        $ref: "#/components/schemas/NodeResponse"
-
-    NodeResponse:
+    NodeWithId:
       allOf:
-        - $ref: "#/components/schemas/Node"
+        - $ref: "#/components/schemas/BaseNode"
         - type: object
           properties:
             id:
@@ -186,7 +317,7 @@ components:
           required:
             - id
 
-    Node:
+    BaseNode:
       type: object
       properties:
         name:
@@ -227,3 +358,23 @@ components:
         - name
         - completion_type
         - status
+
+    Debug:
+      type: object
+      properties:
+        mode:
+          type: string
+          enum:
+            - prod
+            - test
+            - stub
+        stub:
+          type: string
+          description: Перечисления всех стабов
+          enum:
+            - success
+            - notFound
+            - badId
+            - cannotDelete
+            - badSearchString
+            - dbError

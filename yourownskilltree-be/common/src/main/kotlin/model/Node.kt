@@ -1,6 +1,7 @@
 package org.aburavov.yourownskilltree.backend.common.model
 
 open class Node {
+    val id: String = ""
     var name: String = ""
     var completionType: NodeCompletionType = NodeCompletionType.BOOL
     var status: NodeStatus = NodeStatus.CLOSED
@@ -10,19 +11,15 @@ open class Node {
     var questions: List<Question>? = null
 }
 
-class NodeResponse (
-    val id: String,
-): Node ()
-
-enum class NodeCompletionType (var value: String) {
-    BOOL ("bool"),
-    PERCENTAGE ("percentage"),
-    TEST ("test"),
+enum class NodeCompletionType {
+    BOOL,
+    PERCENTAGE,
+    TEST,
 }
 
-enum class NodeStatus(val value: String) {
-    CLOSED("closed"),
-    OPEN("open"),
-    IN_PROGRESS("in_progress"),
-    COMPLETED("completed");
+enum class NodeStatus {
+    CLOSED,
+    OPEN,
+    IN_PROGRESS,
+    COMPLETED;
 }
