@@ -159,6 +159,18 @@ components:
         - success
         - error
 
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        group:
+          type: string
+        field:
+          type: string
+        message:
+          type: string
+
     IResponse:
       type: object
       description: Базовый интерфейс для всех ответов
@@ -172,16 +184,7 @@ components:
         errors:
           type: array
           items:
-            type: object
-            properties:
-              code:
-                type: string
-              group:
-                type: string
-              field:
-                type: string
-              message:
-                type: string
+            $ref: '#/components/schemas/Error'
       discriminator:
         propertyName: responseType
         mapping:
@@ -197,7 +200,7 @@ components:
         - type: object
           properties:
             node:
-              $ref: '#/components/schemas/BaseNode'
+              $ref: '#/components/schemas/Node'
 
     NodeUpdateRequest:
       allOf:
@@ -205,7 +208,7 @@ components:
         - type: object
           properties:
             node:
-              $ref: '#/components/schemas/NodeWithId'
+              $ref: '#/components/schemas/Node'
 
     NodeReadRequest:
       allOf:
@@ -250,7 +253,7 @@ components:
           description: Ответ с одним объектом узла
           properties:
             node:
-              $ref: '#/components/schemas/NodeWithId'
+              $ref: '#/components/schemas/Node'
 
     NodeResponseMulti:
       allOf:
@@ -260,7 +263,7 @@ components:
             nodes:
               type: array
               items:
-                $ref: '#/components/schemas/NodeWithId'
+                $ref: '#/components/schemas/Node'
 
     NodeCreateResponse:
       allOf:
@@ -306,20 +309,13 @@ components:
         right_answer:
           type: string
 
-    NodeWithId:
-      allOf:
-        - $ref: "#/components/schemas/BaseNode"
-        - type: object
-          properties:
-            id:
-              type: string
-              example: a8faeb94-eb05-44f8-888d-e8defb48e412
-          required:
-            - id
-
-    BaseNode:
+    Node:
       type: object
       properties:
+        id:
+          type: string
+          nullable: true
+          example: a8faeb94-eb05-44f8-888d-e8defb48e412
         name:
           type: string
         description:
@@ -376,5 +372,4 @@ components:
             - notFound
             - badId
             - cannotDelete
-            - badSearchString
             - dbError

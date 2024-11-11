@@ -1,7 +1,7 @@
 package org.aburavov.yourownskilltree.backend.common.model
 
 open class Node {
-    val id: String = ""
+    var id: String = ""
     var name: String = ""
     var completionType: NodeCompletionType = NodeCompletionType.BOOL
     var status: NodeStatus = NodeStatus.CLOSED

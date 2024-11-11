@@ -24,11 +24,11 @@ class NodeCreateResponseSerializationTest {
         val response = NodeCreateResponse(
             responseType = "nodeCreated",
             result = ResponseResult.SUCCESS,
-            node = NodeWithId(
+            node = Node(
                 id = "node-123",
                 name = "Docker Basics",
-                completionType = NodeWithId.CompletionType.TEST,
-                status = NodeWithId.Status.OPEN,
+                completionType = Node.CompletionType.TEST,
+                status = Node.Status.OPEN,
                 description = "Learn Docker fundamentals",
                 parentIds = listOf("containers-101"),
                 questions = listOf(

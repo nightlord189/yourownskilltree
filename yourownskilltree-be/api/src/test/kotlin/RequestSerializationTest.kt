@@ -25,11 +25,12 @@ class NodeCreateRequestSerializationTest {
                 Debug.Mode.STUB,
                 Debug.Stub.SUCCESS,
             ),
-            node = BaseNode(
+            node = Node(
+                id = "",
                 name = "Docker Basics",
                 description = "Learn Docker fundamentals",
-                completionType = BaseNode.CompletionType.TEST,
-                status = BaseNode.Status.IN_PROGRESS,
+                completionType = Node.CompletionType.TEST,
+                status = Node.Status.IN_PROGRESS,
                 parentIds = listOf("containers-101"),
                 questions = listOf(
                     Question(
@@ -84,7 +85,7 @@ class NodeCreateRequestSerializationTest {
         assertThat(request.debug).isNotNull
         assertThat(request.node).isNotNull
         assertThat(request.node?.name).isEqualTo("Docker Basics")
-        assertThat(request.node?.completionType).isEqualTo(BaseNode.CompletionType.TEST)
+        assertThat(request.node?.completionType).isEqualTo(Node.CompletionType.TEST)
         assertThat(request.node?.questions).hasSize(1)
     }
 
@@ -93,10 +94,11 @@ class NodeCreateRequestSerializationTest {
         // given
         val request = NodeCreateRequest(
             requestType = "create",
-            node = BaseNode(
+            node = Node(
+                id = "",
                 name = "Simple Node",
-                completionType = BaseNode.CompletionType.BOOL,
-                status = BaseNode.Status.CLOSED
+                completionType = Node.CompletionType.BOOL,
+                status = Node.Status.CLOSED
             )
         )
 
