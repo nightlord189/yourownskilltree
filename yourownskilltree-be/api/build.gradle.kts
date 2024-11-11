@@ -1,5 +1,3 @@
-// build.gradle.kts в папке yourownskilltree-be/api
-
 plugins {
     kotlin("jvm") version "1.9.23"
     id("org.openapi.generator") version "7.2.0"
@@ -10,6 +8,8 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":common"))
+
     implementation("io.swagger.core.v3:swagger-annotations:2.2.20")
     implementation("com.squareup.moshi:moshi-kotlin:1.15.0")
     implementation("com.squareup.moshi:moshi-adapters:1.15.0")
