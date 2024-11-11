@@ -56,7 +56,7 @@ class NodeCreateResponseSerializationTest {
             responseType = "create",
             result = ResponseResult.ERROR,
             errors = listOf(
-                IResponseErrorsInner(
+                Error(
                     code = "VALIDATION_ERROR",
                     message = "Invalid node data",
                     field = "name"

@@ -3,8 +3,8 @@ package org.aburavov.yourownskilltree.backend.common.model
 import java.time.LocalDateTime
 
 open class RequestContext {
-    val errors: MutableList<CommonError> = mutableListOf()
-    val requestID: String? = null
+    var errors: MutableList<CommonError> = mutableListOf()
+    var requestId: String? = null
     var timeStart: LocalDateTime? = null
 
     var workMode: WorkMode = WorkMode.PROD
