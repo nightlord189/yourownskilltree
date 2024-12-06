@@ -1,4 +1,4 @@
-package mappers
+package org.aburavov.yourownskilltree.backend.api.mappers
 
 import org.aburavov.yourownskilltree.backend.common.model.NodeContext
 import org.aburavov.yourownskilltree.backend.common.model.Node as DomainNode
@@ -7,7 +7,7 @@ import org.aburavov.yourownskilltree.backend.common.model.NodeCompletionType as 
 import org.aburavov.yourownskilltree.backend.common.model.QuestionType as DomainQuestionType
 import org.aburavov.yourownskilltree.backend.common.model.Question as DomainQuestion
 import org.aburavov.yourownskilltree.backend.common.model.CommonError
-import com.yourownskilltree.backend.api.model.*
+import org.aburavov.yourownskilltree.backend.api.model.*
 import org.aburavov.yourownskilltree.backend.common.model.NodeCommand
 
 fun NodeContext.toTransportNode(): IResponse = when (command) {
@@ -20,44 +20,54 @@ fun NodeContext.toTransportNode(): IResponse = when (command) {
 }
 
 fun NodeContext.toTransportSearch() = NodeSearchResponse (
+    responseType = "search",
     errors = errors.toTransportErrors(),
-    nodes = nodesResponse.let{ nodesResponse?.map { it.toTransport() }}
+    nodes = nodesResponse.let{ nodesResponse?.map { it.toTransport() }},
+    result = if (errors.isEmpty()) ResponseResult.SUCCESS else ResponseResult.ERROR
 )
 
-fun NodeContext.toTransportRead() = NodeCreateResponse (
+fun NodeContext.toTransportRead() = NodeReadResponse (
+    responseType = "read",
     errors = errors.toTransportErrors(),
-    node = nodeResponse!!.toTransport()
+    node = nodeResponse?.toTransport(),
+    result = if (errors.isEmpty()) ResponseResult.SUCCESS else ResponseResult.ERROR
 )
 
 fun NodeContext.toTransportCreate() = NodeCreateResponse (
+    responseType = "create",
     errors = errors.toTransportErrors(),
-    node = nodeResponse!!.toTransport()
+    node = nodeResponse?.toTransport(),
+    result = if (errors.isEmpty()) ResponseResult.SUCCESS else ResponseResult.ERROR
 )
 
 fun NodeContext.toTransportUpdate() = NodeUpdateResponse (
+    responseType = "update",
     errors = errors.toTransportErrors(),
-    node = nodeResponse!!.toTransport()
+    node = nodeResponse?.toTransport(),
+    result = if (errors.isEmpty()) ResponseResult.SUCCESS else ResponseResult.ERROR
 )
 
 fun NodeContext.toTransportDelete() = NodeDeleteResponse (
+    responseType = "delete",
     errors = errors.toTransportErrors(),
-    node = nodeResponse!!.toTransport()
+    node = nodeResponse?.toTransport(),
+    result = if (errors.isEmpty()) ResponseResult.SUCCESS else ResponseResult.ERROR
 )
 
 fun DomainNode.toTransport(): Node {
-    return com.yourownskilltree.backend.api.model.Node(
+    return Node(
         id = id.takeIf { it.isNotEmpty() },
         name = name,
         completionType = when(completionType) {
-            DomainNodeCompletionType.BOOL -> com.yourownskilltree.backend.api.model.Node.CompletionType.BOOL
-            DomainNodeCompletionType.PERCENTAGE -> com.yourownskilltree.backend.api.model.Node.CompletionType.PERCENTAGE
-            DomainNodeCompletionType.TEST -> com.yourownskilltree.backend.api.model.Node.CompletionType.TEST
+            DomainNodeCompletionType.BOOL -> Node.CompletionType.BOOL
+            DomainNodeCompletionType.PERCENTAGE -> Node.CompletionType.PERCENTAGE
+            DomainNodeCompletionType.TEST -> Node.CompletionType.TEST
         },
         status = when(status) {
-            DomainNodeStatus.CLOSED -> com.yourownskilltree.backend.api.model.Node.Status.CLOSED
-            DomainNodeStatus.OPEN -> com.yourownskilltree.backend.api.model.Node.Status.OPEN
-            DomainNodeStatus.IN_PROGRESS -> com.yourownskilltree.backend.api.model.Node.Status.IN_PROGRESS
-            DomainNodeStatus.COMPLETED -> com.yourownskilltree.backend.api.model.Node.Status.COMPLETED
+            DomainNodeStatus.CLOSED -> Node.Status.CLOSED
+            DomainNodeStatus.OPEN -> Node.Status.OPEN
+            DomainNodeStatus.IN_PROGRESS -> Node.Status.IN_PROGRESS
+            DomainNodeStatus.COMPLETED -> Node.Status.COMPLETED
         },
         description = description,
         parentIds = parentIds.takeIf { it.isNotEmpty() },
@@ -67,11 +77,11 @@ fun DomainNode.toTransport(): Node {
 }
 
 fun DomainQuestion.toTransport(): Question {
-    return com.yourownskilltree.backend.api.model.Question(
+    return Question(
         text = text,
         type = when(type) {
-            DomainQuestionType.OPEN -> com.yourownskilltree.backend.api.model.Question.Type.OPEN
-            DomainQuestionType.CLOSED -> com.yourownskilltree.backend.api.model.Question.Type.CLOSED
+            DomainQuestionType.OPEN -> Question.Type.OPEN
+            DomainQuestionType.CLOSED -> Question.Type.CLOSED
         },
         answers = answers?.takeIf { it.isNotEmpty() },
         rightAnswer = rightAnswer

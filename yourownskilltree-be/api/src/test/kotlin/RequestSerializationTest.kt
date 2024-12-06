@@ -1,4 +1,4 @@
-package com.yourownskilltree.backend.api.model
+package org.aburavov.yourownskilltree.backend.api.model
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule

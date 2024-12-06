@@ -10,5 +10,4 @@ plugins {
 }
 rootProject.name = "yourownskilltree"
 
-includeBuild("lessons")
 includeBuild("yourownskilltree-be")

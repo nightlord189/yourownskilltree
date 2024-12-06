@@ -1,4 +1,4 @@
-package com.yourownskilltree.backend.api.model
+package org.aburavov.yourownskilltree.backend.api.model
 
 import mappers.fromTransport
 import mappers.toTransportCreate

@@ -1,6 +1,6 @@
-package mappers
+package org.aburavov.yourownskilltree.backend.api.mappers
 
-import com.yourownskilltree.backend.api.model.*
+import org.aburavov.yourownskilltree.backend.api.model.*
 import org.aburavov.yourownskilltree.backend.common.model.NodeCommand
 import org.aburavov.yourownskilltree.backend.common.model.NodeContext
 import org.aburavov.yourownskilltree.backend.common.model.NodeStubs
@@ -93,6 +93,7 @@ fun Question.toDomain(): DomainQuestion {
 
 fun Node.toDomain(): DomainNode {
     return DomainNode().apply {
+        id = this@toDomain.id ?: ""
         name = this@toDomain.name
         completionType = when(this@toDomain.completionType) {
             Node.CompletionType.BOOL -> DomainNodeCompletionType.BOOL

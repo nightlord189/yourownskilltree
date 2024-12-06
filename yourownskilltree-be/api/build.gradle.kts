@@ -10,25 +10,25 @@ repositories {
 dependencies {
     implementation(project(":common"))
 
-    implementation("io.swagger.core.v3:swagger-annotations:2.2.20")
-    implementation("com.squareup.moshi:moshi-kotlin:1.15.0")
-    implementation("com.squareup.moshi:moshi-adapters:1.15.0")
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation(libs.swagger.annotations)
+    implementation(libs.moshi.kotlin)
+    implementation(libs.moshi.adapters)
+    implementation(libs.okhttp)
 
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.3")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.3")
+    implementation(libs.jackson.kotlin)
+    implementation(libs.jackson.jsr310)
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
-    testImplementation("org.assertj:assertj-core:3.25.3")
-    testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.3")
+    testImplementation(libs.junit)
+    testImplementation(libs.assertj)
+    testImplementation(libs.jackson.kotlin)
 }
 
 openApiGenerate {
     generatorName.set("kotlin")
     inputSpec.set("${rootProject.projectDir}/../docs/openapi/api.yml")
     outputDir.set("$buildDir/generated")
-    apiPackage.set("com.yourownskilltree.backend.api")
-    modelPackage.set("com.yourownskilltree.backend.api.model")
+    apiPackage.set("org.aburavov.yourownskilltree.backend.api")
+    modelPackage.set("org.aburavov.yourownskilltree.backend.api.model")
     configOptions.set(
         mapOf(
             "dateLibrary" to "java8",
