@@ -8,7 +8,7 @@ import java.util.*
 val unsupportedStubsError = CommonError(message="unsupported stubs")
 
 class NodeProcessor {
-    private val nodes: MutableList<Node> = mutableListOf() //in-memory list for dummy responses
+    val nodes: MutableList<Node> = mutableListOf() //in-memory list for dummy responses
     private val logger = KotlinLogging.logger {}
 
     fun process(ctx: NodeContext) {
@@ -52,9 +52,13 @@ class NodeProcessor {
                 when (ctx.stubCase) {
                     NodeStubs.NONE -> ctx.errors.add(unsupportedStubsError)
                     NodeStubs.SUCCESS -> {
+                        logger.info { "updating node: ${ctx.nodeRequest}, all nodes: $nodes" }
                         val index = nodes.indexOfFirst { it.id == ctx.nodeRequest?.id }
                         if (index != -1) {
                             nodes[index] = ctx.nodeRequest!!
+                            ctx.nodeResponse = nodes[index]
+                        } else {
+                            logger.error { "cannot find node with id ${ctx.nodeRequest?.id} to update" }
                         }
                     }
                     NodeStubs.NOT_FOUND -> ctx.errors.add(CommonError(message="not found"))

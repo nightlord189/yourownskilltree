@@ -20,30 +20,35 @@ fun NodeContext.toTransportNode(): IResponse = when (command) {
 }
 
 fun NodeContext.toTransportSearch() = NodeSearchResponse (
+    responseType = "search",
     errors = errors.toTransportErrors(),
     nodes = nodesResponse.let{ nodesResponse?.map { it.toTransport() }},
     result = if (errors.isEmpty()) ResponseResult.SUCCESS else ResponseResult.ERROR
 )
 
 fun NodeContext.toTransportRead() = NodeReadResponse (
+    responseType = "read",
     errors = errors.toTransportErrors(),
     node = nodeResponse?.toTransport(),
     result = if (errors.isEmpty()) ResponseResult.SUCCESS else ResponseResult.ERROR
 )
 
 fun NodeContext.toTransportCreate() = NodeCreateResponse (
+    responseType = "create",
     errors = errors.toTransportErrors(),
     node = nodeResponse?.toTransport(),
     result = if (errors.isEmpty()) ResponseResult.SUCCESS else ResponseResult.ERROR
 )
 
 fun NodeContext.toTransportUpdate() = NodeUpdateResponse (
+    responseType = "update",
     errors = errors.toTransportErrors(),
     node = nodeResponse?.toTransport(),
     result = if (errors.isEmpty()) ResponseResult.SUCCESS else ResponseResult.ERROR
 )
 
 fun NodeContext.toTransportDelete() = NodeDeleteResponse (
+    responseType = "delete",
     errors = errors.toTransportErrors(),
     node = nodeResponse?.toTransport(),
     result = if (errors.isEmpty()) ResponseResult.SUCCESS else ResponseResult.ERROR
