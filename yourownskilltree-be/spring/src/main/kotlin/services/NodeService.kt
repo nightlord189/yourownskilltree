@@ -1,5 +1,6 @@
 package org.aburavov.yourownskilltree.backend.spring.services
 
+import mu.KotlinLogging
 import org.aburavov.yourownskilltree.backend.api.mappers.*
 import org.aburavov.yourownskilltree.backend.common.model.*
 import org.springframework.stereotype.Service
@@ -9,9 +10,11 @@ val unsupportedStubsError = CommonError(message="unsupported stubs")
 
 @Service
 class NodeService {
-    val nodes: MutableList<Node> = mutableListOf()
+    private val nodes: MutableList<Node> = mutableListOf() //in-memory list for dummy responses
+    private val logger = KotlinLogging.logger {}
 
     fun process(ctx: NodeContext) {
+        logger.info { "processing NodeContext" }
         when (ctx.workMode) {
             WorkMode.PROD, WorkMode.TEST -> {
                 ctx.errors.add(CommonError(message="unsupported workMode"))
@@ -47,9 +50,52 @@ class NodeService {
                     NodeStubs.DB_ERROR -> ctx.errors.add(CommonError(message="db error"))
                 }
             }
-            NodeCommand.UPDATE -> TODO()
-            NodeCommand.DELETE -> TODO()
-            NodeCommand.SEARCH -> TODO()
+            NodeCommand.UPDATE -> {
+                when (ctx.stubCase) {
+                    NodeStubs.NONE -> ctx.errors.add(unsupportedStubsError)
+                    NodeStubs.SUCCESS -> {
+                        val index = nodes.indexOfFirst { it.id == ctx.nodeRequest?.id }
+                        if (index != -1) {
+                            nodes[index] = ctx.nodeRequest!!
+                        }
+                    }
+                    NodeStubs.NOT_FOUND -> ctx.errors.add(CommonError(message="not found"))
+                    NodeStubs.BAD_ID -> ctx.errors.add(CommonError(message="bad id"))
+                    NodeStubs.CANNOT_DELETE -> ctx.errors.add(unsupportedStubsError)
+                    NodeStubs.DB_ERROR -> ctx.errors.add(CommonError(message="db error"))
+                }
+            }
+            NodeCommand.DELETE -> {
+                when (ctx.stubCase) {
+                    NodeStubs.NONE -> ctx.errors.add(unsupportedStubsError)
+                    NodeStubs.SUCCESS -> {
+                        nodes.removeIf {it.id == ctx.nodeRequest?.id}
+                    }
+                    NodeStubs.NOT_FOUND -> ctx.errors.add(CommonError(message="not found"))
+                    NodeStubs.BAD_ID -> ctx.errors.add(CommonError(message="bad id"))
+                    NodeStubs.CANNOT_DELETE -> ctx.errors.add(CommonError(message="cannot delete"))
+                    NodeStubs.DB_ERROR -> ctx.errors.add(CommonError(message="db error"))
+                }
+            }
+            NodeCommand.SEARCH -> {
+                when (ctx.stubCase) {
+                    NodeStubs.NONE -> ctx.errors.add(unsupportedStubsError)
+                    NodeStubs.SUCCESS -> {
+                        ctx.nodesResponse = nodes.
+                        filter { (ctx.nodeFilterRequest?.nameLike ?: "") in it.name}.
+                        filter { node ->
+                            ctx.nodeFilterRequest?.parentId?.let { parentId ->
+                                node.parentIds.contains(parentId)
+                            } ?: true
+                        }
+                        .toMutableList()
+                    }
+                    NodeStubs.NOT_FOUND -> ctx.errors.add(CommonError(message="not found"))
+                    NodeStubs.BAD_ID -> ctx.errors.add(unsupportedStubsError)
+                    NodeStubs.CANNOT_DELETE -> ctx.errors.add(unsupportedStubsError)
+                    NodeStubs.DB_ERROR -> ctx.errors.add(CommonError(message="db error"))
+                }
+            }
             NodeCommand.NONE -> throw Exception("unknown command")
         }
     }

@@ -20,36 +20,36 @@ class NodeController (
 ) {
     private val logger = KotlinLogging.logger {}
 
-    @PostMapping("create")
-    suspend fun create(@RequestBody request: NodeCreateRequest): NodeCreateResponse {
-        logger.info{"create request"}
+    fun process (request: IRequest): IResponse {
+        logger.info { "New request: ${request.requestType}" }
         val ctx = NodeContext()
         ctx.fromTransport(request)
         nodeService.process(ctx)
-        return ctx.toTransportCreate()
+        return ctx.toTransportNode()
+    }
+
+    @PostMapping("create")
+    suspend fun create(@RequestBody request: NodeCreateRequest): NodeCreateResponse {
+        return process(request) as NodeCreateResponse
     }
 
     @PostMapping("search")
     suspend fun search(@RequestBody request: NodeSearchRequest): NodeSearchResponse {
-        logger.info{"search request"}
-        return NodeSearchResponse()
+        return process(request) as NodeSearchResponse
     }
 
     @PostMapping("read")
     suspend fun read(@RequestBody request: NodeReadRequest): NodeReadResponse {
-        logger.info{"read request"}
-        return NodeReadResponse()
+        return process(request) as NodeReadResponse
     }
 
     @PostMapping("update")
     suspend fun update(@RequestBody request: NodeUpdateRequest): NodeUpdateResponse {
-        logger.info{"update request"}
-        return NodeUpdateResponse()
+        return process(request) as NodeUpdateResponse
     }
 
     @PostMapping("delete")
     suspend fun delete(@RequestBody request: NodeDeleteRequest): NodeDeleteResponse {
-        logger.info{"delete request"}
-        return NodeDeleteResponse()
+        return process(request) as NodeDeleteResponse
     }
 }
