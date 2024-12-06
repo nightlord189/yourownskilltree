@@ -133,7 +133,6 @@ paths:
 
 components:
   schemas:
-
     IRequest:
       type: object
       description: Базовый интерфейс для всех запросов

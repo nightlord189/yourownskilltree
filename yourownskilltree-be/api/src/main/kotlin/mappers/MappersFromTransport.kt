@@ -1,6 +1,6 @@
-package mappers
+package org.aburavov.yourownskilltree.backend.api.mappers
 
-import com.yourownskilltree.backend.api.model.*
+import org.aburavov.yourownskilltree.backend.api.model.*
 import org.aburavov.yourownskilltree.backend.common.model.NodeCommand
 import org.aburavov.yourownskilltree.backend.common.model.NodeContext
 import org.aburavov.yourownskilltree.backend.common.model.NodeStubs

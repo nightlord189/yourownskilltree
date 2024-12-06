@@ -27,8 +27,8 @@ openApiGenerate {
     generatorName.set("kotlin")
     inputSpec.set("${rootProject.projectDir}/../docs/openapi/api.yml")
     outputDir.set("$buildDir/generated")
-    apiPackage.set("com.yourownskilltree.backend.api")
-    modelPackage.set("com.yourownskilltree.backend.api.model")
+    apiPackage.set("org.aburavov.yourownskilltree.backend.api")
+    modelPackage.set("org.aburavov.yourownskilltree.backend.api.model")
     configOptions.set(
         mapOf(
             "dateLibrary" to "java8",

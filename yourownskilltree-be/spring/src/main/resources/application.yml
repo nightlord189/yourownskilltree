@@ -14,11 +14,8 @@ spring:
   jackson:
     default-property-inclusion: non_null
 
-springdoc:
-  api-docs:
-    enabled: false
-  swagger-ui:
-    use-root-path: true
-    urls:
-      - name: api
-        url: api.yaml
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+    org.aburavov.yourownskilltree.backend.spring: DEBUG
