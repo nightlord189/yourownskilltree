@@ -1,15 +1,13 @@
-package org.aburavov.yourownskilltree.backend.spring.services
+package org.aburavov.yourownskilltree.backend.biz
 
 import mu.KotlinLogging
 import org.aburavov.yourownskilltree.backend.api.mappers.*
 import org.aburavov.yourownskilltree.backend.common.model.*
-import org.springframework.stereotype.Service
 import java.util.*
 
 val unsupportedStubsError = CommonError(message="unsupported stubs")
 
-@Service
-class NodeService {
+class NodeProcessor {
     private val nodes: MutableList<Node> = mutableListOf() //in-memory list for dummy responses
     private val logger = KotlinLogging.logger {}
 
@@ -88,7 +86,7 @@ class NodeService {
                                 node.parentIds.contains(parentId)
                             } ?: true
                         }
-                        .toMutableList()
+                            .toMutableList()
                     }
                     NodeStubs.NOT_FOUND -> ctx.errors.add(CommonError(message="not found"))
                     NodeStubs.BAD_ID -> ctx.errors.add(unsupportedStubsError)

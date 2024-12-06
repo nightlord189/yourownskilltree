@@ -1,7 +1,7 @@
 package org.aburavov.yourownskilltree.backend.spring.controllers
 
 import org.aburavov.yourownskilltree.backend.api.model.*
-import org.aburavov.yourownskilltree.backend.spring.services.NodeService
+import org.aburavov.yourownskilltree.backend.biz.NodeProcessor
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
@@ -18,7 +18,7 @@ class NodeControllerTest {
     private lateinit var webTestClient: WebTestClient
 
     @MockBean
-    private lateinit var nodeService: NodeService
+    private lateinit var nodeProcessor: NodeProcessor
 
     @Test
     fun testCreate() {

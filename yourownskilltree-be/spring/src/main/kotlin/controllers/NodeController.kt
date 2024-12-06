@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.RestController
 
 import org.aburavov.yourownskilltree.backend.api.model.*
 import org.aburavov.yourownskilltree.backend.api.mappers.*
+import org.aburavov.yourownskilltree.backend.biz.NodeProcessor
 import org.aburavov.yourownskilltree.backend.common.model.NodeContext
-import org.aburavov.yourownskilltree.backend.spring.services.NodeService
 
 @Suppress("unused")
 @RestController
 @RequestMapping("node")
 class NodeController (
-    private val nodeService: NodeService,
+    private val nodeProcessor: NodeProcessor,
 ) {
     private val logger = KotlinLogging.logger {}
 
@@ -24,7 +24,7 @@ class NodeController (
         logger.info { "New request: ${request.requestType}" }
         val ctx = NodeContext()
         ctx.fromTransport(request)
-        nodeService.process(ctx)
+        nodeProcessor.process(ctx)
         return ctx.toTransportNode()
     }
 
