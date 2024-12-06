@@ -14,7 +14,7 @@ class NodeService {
     private val logger = KotlinLogging.logger {}
 
     fun process(ctx: NodeContext) {
-        logger.info { "processing NodeContext" }
+        logger.info { "processing NodeContext with workMode ${ctx.workMode} and command ${ctx.command}" }
         when (ctx.workMode) {
             WorkMode.PROD, WorkMode.TEST -> {
                 ctx.errors.add(CommonError(message="unsupported workMode"))

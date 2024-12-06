@@ -21,27 +21,32 @@ fun NodeContext.toTransportNode(): IResponse = when (command) {
 
 fun NodeContext.toTransportSearch() = NodeSearchResponse (
     errors = errors.toTransportErrors(),
-    nodes = nodesResponse.let{ nodesResponse?.map { it.toTransport() }}
+    nodes = nodesResponse.let{ nodesResponse?.map { it.toTransport() }},
+    result = if (errors.isEmpty()) ResponseResult.SUCCESS else ResponseResult.ERROR
 )
 
 fun NodeContext.toTransportRead() = NodeReadResponse (
     errors = errors.toTransportErrors(),
-    node = nodeResponse?.toTransport()
+    node = nodeResponse?.toTransport(),
+    result = if (errors.isEmpty()) ResponseResult.SUCCESS else ResponseResult.ERROR
 )
 
 fun NodeContext.toTransportCreate() = NodeCreateResponse (
     errors = errors.toTransportErrors(),
-    node = nodeResponse?.toTransport()
+    node = nodeResponse?.toTransport(),
+    result = if (errors.isEmpty()) ResponseResult.SUCCESS else ResponseResult.ERROR
 )
 
 fun NodeContext.toTransportUpdate() = NodeUpdateResponse (
     errors = errors.toTransportErrors(),
-    node = nodeResponse?.toTransport()
+    node = nodeResponse?.toTransport(),
+    result = if (errors.isEmpty()) ResponseResult.SUCCESS else ResponseResult.ERROR
 )
 
 fun NodeContext.toTransportDelete() = NodeDeleteResponse (
     errors = errors.toTransportErrors(),
-    node = nodeResponse?.toTransport()
+    node = nodeResponse?.toTransport(),
+    result = if (errors.isEmpty()) ResponseResult.SUCCESS else ResponseResult.ERROR
 )
 
 fun DomainNode.toTransport(): Node {

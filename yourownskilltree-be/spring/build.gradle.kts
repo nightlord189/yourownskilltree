@@ -14,10 +14,16 @@ dependencies {
     implementation(libs.coroutines.core)
     implementation(libs.coroutines.reactor)
 
-    implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
+    implementation(libs.kotlin.logging)
 
     implementation(project(":api"))
     implementation(project(":common"))
+
+    testImplementation(libs.spring.test)
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 repositories {
