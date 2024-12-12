@@ -1,0 +1,21 @@
+server:
+  port: 8080
+
+management:
+  endpoint:
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: info,env
+
+spring:
+  jackson:
+    default-property-inclusion: non_null
+
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+    org.aburavov.yourownskilltree.backend.spring: DEBUG
