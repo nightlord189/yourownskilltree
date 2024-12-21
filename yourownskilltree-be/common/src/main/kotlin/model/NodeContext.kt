@@ -8,6 +8,10 @@ class NodeContext: RequestContext() {
 
     var nodeResponse: Node? = null
     var nodesResponse: MutableList<Node>? = null
+
+    fun addError(message: String) {
+        errors.add(CommonError(message))
+    }
 }
 
 enum class NodeCommand {

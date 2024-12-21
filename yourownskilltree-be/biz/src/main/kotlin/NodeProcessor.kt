@@ -1,7 +1,9 @@
 package org.aburavov.yourownskilltree.backend.biz
 
 import mu.KotlinLogging
+import org.aburavov.yourownskilltree.backend.biz.validation.*
 import org.aburavov.yourownskilltree.backend.common.model.*
+import org.aburavov.yourownskilltree.backend.cor.Chain
 import java.util.*
 
 val unsupportedStubsError = CommonError(message="unsupported stubs")
@@ -36,6 +38,11 @@ class NodeProcessor {
                 }
             }
             NodeCommand.READ -> {
+                Chain<NodeContext>(workers = mutableListOf(
+                    Validator(::validateReadRequest),
+                    FinishValidator()
+                )).run(ctx)
+
                 when (ctx.stubCase) {
                     NodeStubs.NONE -> ctx.errors.add(unsupportedStubsError)
                     NodeStubs.SUCCESS -> {
