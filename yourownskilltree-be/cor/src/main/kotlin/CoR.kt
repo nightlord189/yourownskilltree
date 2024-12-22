@@ -1,11 +1,20 @@
 package org.aburavov.yourownskilltree.backend.cor
 
 abstract class Worker<T> {
-    abstract fun on (context: T): Boolean
+    /**
+     * возвращает True, если может обработать объект
+     */
+    abstract fun on (ctx: T): Boolean
 
-    abstract fun handle (context: T): Boolean
+    /**
+    * возвращает True, если цепочка может быть продолжена или False, если она должна быть остановлена на этом обработчике
+    */
+    abstract fun handle (ctx: T): Boolean
 }
 
+/**
+ * Цепочка воркеров
+ */
 class Chain<T>(private var workers: MutableList<Worker<T>>) {
     fun run (ctx: T) {
         var idx = 0

@@ -2,11 +2,18 @@ plugins {
     id("build-jvm")
 }
 
-dependencies {
-    implementation(libs.kotlin.logging)
-}
-
 
 repositories {
     mavenCentral()
+}
+
+dependencies {
+    implementation(libs.kotlin.logging)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.assertj)
+}
+
+tasks.test {
+    useJUnitPlatform()
 }

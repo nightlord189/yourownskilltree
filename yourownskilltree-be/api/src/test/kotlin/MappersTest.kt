@@ -1,7 +1,7 @@
 package org.aburavov.yourownskilltree.backend.api.model
 
-import mappers.fromTransport
-import mappers.toTransportCreate
+import org.aburavov.yourownskilltree.backend.api.mappers.fromTransport
+import org.aburavov.yourownskilltree.backend.api.mappers.toTransportCreate
 import org.aburavov.yourownskilltree.backend.common.model.*
 import org.aburavov.yourownskilltree.backend.common.model.Node as DomainNode
 import org.junit.jupiter.api.Test

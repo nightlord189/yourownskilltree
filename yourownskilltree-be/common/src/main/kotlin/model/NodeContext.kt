@@ -5,12 +5,14 @@ class NodeContext: RequestContext() {
 
     var nodeRequest: Node? = null
     var nodeFilterRequest: NodeFilter? = null
+    var nodeIdRequest: String? = null
+    var nodeLock: String? = null // for delete case
 
     var nodeResponse: Node? = null
     var nodesResponse: MutableList<Node>? = null
 
-    fun addError(message: String) {
-        errors.add(CommonError(message))
+    fun addError(msg: String) {
+        errors.add(CommonError().apply { message = msg })
     }
 }
 

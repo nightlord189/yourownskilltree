@@ -30,7 +30,7 @@ fun NodeContext.fromTransport(request: NodeCreateRequest) {
 
 fun NodeContext.fromTransport(request: NodeReadRequest) {
     command = NodeCommand.READ
-    nodeRequest = DomainNode().apply{id = request.id!!}
+    nodeIdRequest = request.id
     workMode = request.debug.transportToWorkMode()
     stubCase = request.debug.transportToStubCase()
 }
@@ -44,7 +44,8 @@ fun NodeContext.fromTransport(request: NodeUpdateRequest) {
 
 fun NodeContext.fromTransport(request: NodeDeleteRequest) {
     command = NodeCommand.DELETE
-    nodeRequest = DomainNode().apply{id = request.id!!}
+    nodeIdRequest = request.id
+    nodeLock = request.lock
     workMode = request.debug.transportToWorkMode()
     stubCase = request.debug.transportToStubCase()
 }
@@ -110,5 +111,6 @@ fun Node.toDomain(): DomainNode {
         parentIds = this@toDomain.parentIds ?: emptyList()
         progress = this@toDomain.progress
         questions = this@toDomain.questions?.map { it.toDomain() }
+        lock = this@toDomain.lock?:""
     }
 }

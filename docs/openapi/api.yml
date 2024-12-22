@@ -228,6 +228,10 @@ components:
               type: string
               example: a8faeb94-eb05-44f8-888d-e8defb48e412
               description: ID of the node
+            lock:
+              type: string
+              example: f1b4a531-6d00-4422-bb45-e1724abd6113
+              description: to check parallel modifying of the node
 
     NodeSearchRequest:
       allOf:
@@ -338,6 +342,9 @@ components:
             - open
             - in_progress
             - completed
+        lock:
+          type: string
+          example: 53809fcd-7e1e-45b0-976d-30287cb54895
         progress:
           type: integer
           format: int

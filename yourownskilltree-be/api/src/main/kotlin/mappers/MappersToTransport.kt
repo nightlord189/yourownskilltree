@@ -72,7 +72,8 @@ fun DomainNode.toTransport(): Node {
         description = description,
         parentIds = parentIds.takeIf { it.isNotEmpty() },
         progress = progress,
-        questions = questions?.let { questions -> questions.map { it.toTransport() } }
+        questions = questions?.let { questions -> questions.map { it.toTransport() } },
+        lock = lock
     )
 }
 
