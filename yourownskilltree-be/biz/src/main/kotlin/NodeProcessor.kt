@@ -25,6 +25,7 @@ class NodeProcessor {
         when (ctx.command) {
             NodeCommand.CREATE -> {
                 Chain<NodeContext>(
+                    Validator(::validateRequest),
                     Validator(::validateName),
                     Validator(::validateBusiness),
                     ValidatorFinish(),
@@ -50,6 +51,7 @@ class NodeProcessor {
             }
             NodeCommand.UPDATE -> {
                 Chain<NodeContext>(
+                    Validator(::validateRequest),
                     Validator(::validateId),
                     Validator(::validateName),
                     Validator(::validateBusiness),

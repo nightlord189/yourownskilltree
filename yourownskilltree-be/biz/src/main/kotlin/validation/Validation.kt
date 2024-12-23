@@ -26,7 +26,7 @@ fun validateLock(ctx: NodeContext): Boolean {
 }
 
 fun validateId (ctx: NodeContext): Boolean {
-    if (ctx.nodeRequest!!.id == "") {
+    if (ctx.nodeRequest?.id == "") {
         ctx.addError("id must be filled")
     }
     return true
@@ -39,17 +39,20 @@ fun validateName (ctx: NodeContext): Boolean {
     return true
 }
 
-fun validateBusiness (ctx: NodeContext): Boolean {
-    val node = ctx.nodeRequest
-    if (node == null) {
+fun validateRequest (ctx: NodeContext): Boolean {
+    if (ctx.nodeRequest == null) {
         ctx.addError("request is empty")
     }
-    if (node!!.completionType == NodeCompletionType.PERCENTAGE) {
-        if (node.progress!! < 0 || node.progress!! > 100) {
+    return true
+}
+
+fun validateBusiness (ctx: NodeContext): Boolean {
+    if (ctx.nodeRequest?.completionType == NodeCompletionType.PERCENTAGE) {
+        if ((ctx.nodeRequest?.progress ?: 0) < 0 || (ctx.nodeRequest?.progress ?: 0) > 100) {
             ctx.addError("progress must be equal to [0;100] with PERCENTAGE completion")
         }
     }
-    if (node.completionType == NodeCompletionType.TEST && node.questions.isNullOrEmpty()) {
+    if (ctx.nodeRequest?.completionType == NodeCompletionType.TEST && ctx.nodeRequest?.questions.isNullOrEmpty()) {
         ctx.addError("at least one question must be filled for TEST completion")
     }
     return true
@@ -60,7 +63,7 @@ fun validateFilter (ctx: NodeContext): Boolean {
         ctx.addError("filter must be filled")
         return true
     }
-    if (ctx.nodeFilterRequest!!.parentId == null && ctx.nodeFilterRequest!!.nameLike ==null) {
+    if (ctx.nodeFilterRequest?.parentId == null && ctx.nodeFilterRequest?.nameLike ==null) {
         ctx.addError("parent_id or name_like must be filled")
     }
     return true

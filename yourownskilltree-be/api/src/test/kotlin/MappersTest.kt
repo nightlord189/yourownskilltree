@@ -46,16 +46,16 @@ class MappersTest {
 
         // проверяем маппинг node
         with(context.nodeRequest) {
-            assertEquals("Test Node", this?.name!!)
-            assertEquals(NodeCompletionType.TEST, completionType)
-            assertEquals(NodeStatus.IN_PROGRESS, status)
-            assertEquals("Test Description", description)
-            assertEquals(listOf("parent1", "parent2"), parentIds)
-            assertEquals(75, progress)
+            assertEquals("Test Node", this?.name ?: "")
+            assertEquals(NodeCompletionType.TEST, this?.completionType ?: NodeCompletionType.BOOL)
+            assertEquals(NodeStatus.IN_PROGRESS, this?.status ?: NodeStatus.OPEN)
+            assertEquals("Test Description",this?.description)
+            assertEquals(listOf("parent1", "parent2"), this?.parentIds)
+            assertEquals(75, this?.progress)
 
             // проверяем маппинг вложенных questions
-            assertNotNull(this.questions)
-            assertEquals(1, questions?.size)
+            assertNotNull(this?.questions)
+            assertEquals(1, this?.questions?.size)
             this?.questions?.first()?.let { question ->
                 assertEquals("Test Question", question.text)
                 assertEquals(QuestionType.OPEN, question.type)

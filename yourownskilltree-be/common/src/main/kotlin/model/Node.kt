@@ -5,7 +5,7 @@ open class Node {
     var name: String = ""
     var description: String? = null
     var completionType: NodeCompletionType = NodeCompletionType.BOOL
-    var status: NodeStatus = NodeStatus.CLOSED
+    var status: NodeStatus = NodeStatus.OPEN
     var parentIds: List<String> = emptyList()
     var progress: Int? = null
     var questions: List<Question>? = null

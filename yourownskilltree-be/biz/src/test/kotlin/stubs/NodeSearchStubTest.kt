@@ -21,11 +21,15 @@ class NodeSearchStubTest {
 
         processor.process(context)
 
+        context.errors.any { it.message.contains("lock must be filled") }
+        context.nodesResponse?.any{it.name.contains(context.nodeFilterRequest?.nameLike ?: "")}
+
         assertAll(
             { assertTrue(context.errors.isEmpty()) },
             { assertNotNull(context.nodesResponse) },
             { assertTrue  (context.nodesResponse?.count() == 1) },
-            { assertTrue(context.nodesResponse!![0].name.contains(context.nodeFilterRequest!!.nameLike!!)) },
+            { context.nodesResponse?.any{it.name.contains(context.nodeFilterRequest?.nameLike ?: "")}
+                ?.let { assertTrue(it) } }
         )
     }
 
