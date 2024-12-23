@@ -10,6 +10,20 @@ open class Node {
     var progress: Int? = null
     var questions: List<Question>? = null
     var lock: String = ""
+
+    fun copy(): Node {
+        return Node().also { node ->
+            node.id = id
+            node.name = name
+            node.description = description
+            node.completionType = completionType
+            node.status = status
+            node.parentIds = parentIds.toList()
+            node.progress = progress
+            node.questions = questions?.toList()
+            node.lock = lock
+        }
+    }
 }
 
 enum class NodeCompletionType {
