@@ -16,10 +16,10 @@ class ChainTest {
         private val shouldHandle: Boolean = true,
         private val shouldContinue: Boolean = true
     ) : Worker<TestContext>() {
-        override fun on(context: TestContext): Boolean = shouldHandle
+        override fun on(ctx: TestContext): Boolean = shouldHandle
 
-        override fun handle(context: TestContext): Boolean {
-            context.executedWorkers.add(name)
+        override fun handle(ctx: TestContext): Boolean {
+            ctx.executedWorkers.add(name)
             return shouldContinue
         }
     }
@@ -28,7 +28,7 @@ class ChainTest {
     fun `empty chain should do nothing`() {
         // Arrange
         val ctx = TestContext()
-        val chain = Chain<TestContext>(mutableListOf())
+        val chain = Chain<TestContext>()
 
         // Act
         chain.run(ctx)
@@ -42,11 +42,9 @@ class ChainTest {
         // Arrange
         val ctx = TestContext()
         val chain = Chain(
-            mutableListOf(
-                TestWorker("worker1"),
-                TestWorker("worker2"),
-                TestWorker("worker3")
-            )
+            TestWorker("worker1"),
+            TestWorker("worker2"),
+            TestWorker("worker3")
         )
 
         // Act
@@ -64,11 +62,9 @@ class ChainTest {
         // Arrange
         val ctx = TestContext()
         val chain = Chain(
-            mutableListOf(
-                TestWorker("worker1"),
-                TestWorker("worker2", shouldContinue = false),
-                TestWorker("worker3")
-            )
+            TestWorker("worker1"),
+            TestWorker("worker2", shouldContinue = false),
+            TestWorker("worker3")
         )
 
         // Act
@@ -86,11 +82,9 @@ class ChainTest {
         // Arrange
         val ctx = TestContext()
         val chain = Chain(
-            mutableListOf(
-                TestWorker("worker1"),
-                TestWorker("worker2", shouldHandle = false),
-                TestWorker("worker3")
-            )
+            TestWorker("worker1"),
+            TestWorker("worker2", shouldHandle = false),
+            TestWorker("worker3")
         )
 
         // Act
@@ -112,11 +106,11 @@ class ChainTest {
         )
 
         class ValidatorWorker : Worker<NodeContext>() {
-            override fun on(context: NodeContext) = true
+            override fun on(ctx: NodeContext) = true
 
-            override fun handle(context: NodeContext): Boolean {
-                if (context.value.isEmpty()) {
-                    context.errors.add("Value cannot be empty")
+            override fun handle(ctx: NodeContext): Boolean {
+                if (ctx.value.isEmpty()) {
+                    ctx.errors.add("Value cannot be empty")
                     return false
                 }
                 return true
@@ -124,17 +118,17 @@ class ChainTest {
         }
 
         class ProcessorWorker : Worker<NodeContext>() {
-            override fun on(context: NodeContext) = context.errors.isEmpty()
+            override fun on(ctx: NodeContext) = ctx.errors.isEmpty()
 
-            override fun handle(context: NodeContext): Boolean {
-                context.value = context.value.uppercase()
+            override fun handle(ctx: NodeContext): Boolean {
+                ctx.value = ctx.value.uppercase()
                 return true
             }
         }
 
         // Test with valid input
         val validContext = NodeContext("test")
-        val validChain = Chain(mutableListOf(ValidatorWorker(), ProcessorWorker()))
+        val validChain = Chain(ValidatorWorker(), ProcessorWorker())
         validChain.run(validContext)
 
         assertEquals("TEST", validContext.value)
@@ -142,7 +136,7 @@ class ChainTest {
 
         // Test with invalid input
         val invalidContext = NodeContext("")
-        val invalidChain = Chain(mutableListOf(ValidatorWorker(), ProcessorWorker()))
+        val invalidChain = Chain(ValidatorWorker(), ProcessorWorker())
         invalidChain.run(invalidContext)
 
         assertEquals("", invalidContext.value)

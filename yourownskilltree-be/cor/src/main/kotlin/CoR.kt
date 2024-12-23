@@ -15,7 +15,9 @@ abstract class Worker<T> {
 /**
  * Цепочка воркеров
  */
-class Chain<T>(private var workers: MutableList<Worker<T>>) {
+class Chain<T>(vararg workers: Worker<T>) {
+    private val workers: List<Worker<T>> = workers.toList()
+
     fun run (ctx: T) {
         var idx = 0
 

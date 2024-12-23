@@ -9,9 +9,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class ValidationTest {
-    private fun makeChain(validationWorker: Worker<NodeContext>) = Chain<NodeContext>(
-        workers = mutableListOf(validationWorker, ValidatorFinish())
-    )
+    private fun makeChain(validationWorker: Worker<NodeContext>) = Chain<NodeContext>(validationWorker)
 
     @Nested
     inner class NameValidation {

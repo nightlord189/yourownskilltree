@@ -5,6 +5,7 @@ import org.aburavov.yourownskilltree.backend.biz.stubs.*
 import org.aburavov.yourownskilltree.backend.biz.validation.*
 import org.aburavov.yourownskilltree.backend.common.model.*
 import org.aburavov.yourownskilltree.backend.cor.Chain
+import org.aburavov.yourownskilltree.backend.cor.Worker
 import java.util.*
 
 class NodeProcessor {
@@ -23,7 +24,7 @@ class NodeProcessor {
 
         when (ctx.command) {
             NodeCommand.CREATE -> {
-                Chain<NodeContext>(workers = mutableListOf(
+                Chain<NodeContext>(
                     Validator(::validateName),
                     Validator(::validateBusiness),
                     ValidatorFinish(),
@@ -33,10 +34,10 @@ class NodeProcessor {
                     UnsupportedStub(NodeStubs.CANNOT_DELETE),
                     StubDbError(),
                     StubSuccessCreate(),
-                )).run(ctx)
+                ).run(ctx)
             }
             NodeCommand.READ -> {
-                Chain<NodeContext>(workers = mutableListOf(
+                Chain<NodeContext>(
                     Validator(::validateIdRequest),
                     ValidatorFinish(),
                     UnsupportedStub(NodeStubs.NONE),
@@ -45,10 +46,10 @@ class NodeProcessor {
                     StubBadIdError(),
                     StubDbError(),
                     StubSuccessRead()
-                )).run(ctx)
+                ).run(ctx)
             }
             NodeCommand.UPDATE -> {
-                Chain<NodeContext>(workers = mutableListOf(
+                Chain<NodeContext>(
                     Validator(::validateId),
                     Validator(::validateName),
                     Validator(::validateBusiness),
@@ -60,10 +61,10 @@ class NodeProcessor {
                     StubBadIdError(),
                     StubDbError(),
                     StubSuccessUpdate()
-                )).run(ctx)
+                ).run(ctx)
             }
             NodeCommand.DELETE -> {
-                Chain<NodeContext>(workers = mutableListOf(
+                Chain<NodeContext>(
                     Validator(::validateIdRequest),
                     Validator(::validateLockRequest),
                     ValidatorFinish(),
@@ -73,10 +74,10 @@ class NodeProcessor {
                     StubCannotDeleteError(),
                     StubDbError(),
                     StubSuccessDelete(),
-                )).run(ctx)
+                ).run(ctx)
             }
             NodeCommand.SEARCH -> {
-                Chain<NodeContext>(workers = mutableListOf(
+                Chain<NodeContext>(
                     Validator(::validateFilter),
                     ValidatorFinish(),
                     UnsupportedStub(NodeStubs.NONE),
@@ -85,7 +86,7 @@ class NodeProcessor {
                     StubNotFoundError(),
                     StubDbError(),
                     StubSuccessSearch()
-                )).run(ctx)
+                ).run(ctx)
             }
             NodeCommand.NONE -> throw Exception("unknown command")
         }
