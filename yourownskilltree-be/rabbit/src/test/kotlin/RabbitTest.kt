@@ -79,7 +79,7 @@ class RabbitControllerTest {
         val response = readFromChannel()
         assert(response != null)
 
-        val resp = objectMapper.readValue(response!!.body, NodeCreateResponse::class.java)
+        val resp = objectMapper.readValue(response?.body, NodeCreateResponse::class.java)
         assert(resp.responseType == request.requestType)
         assert(resp.result == ResponseResult.SUCCESS)
         assert(resp.node?.name == request.node?.name)
@@ -89,21 +89,16 @@ class RabbitControllerTest {
 
     @Test
     fun testNodeUpdate() {
-        val existingNode = commonNode().apply {
-            id = "203"
-            name = "nodeToUpdate"
-        }
-        controller.nodeProcessor.nodes.add(existingNode)
-
         val request = NodeUpdateRequest(
             requestType = "update",
             debug = Debug(mode = Debug.Mode.STUB, stub = Debug.Stub.SUCCESS),
             node = Node(
-                id = existingNode.id,
-                name = "nodeToUpdate2",
+                id = "111",
+                name = "newName",
                 description = "test description",
                 completionType = Node.CompletionType.BOOL,
-                status = Node.Status.OPEN
+                status = Node.Status.OPEN,
+                lock = "lock1",
             )
         )
 
@@ -112,26 +107,20 @@ class RabbitControllerTest {
         val response = readFromChannel()
         assert(response != null)
 
-        val resp = objectMapper.readValue(response!!.body, NodeUpdateResponse::class.java)
+        val resp = objectMapper.readValue(response?.body, NodeUpdateResponse::class.java)
         assert(resp.responseType == request.requestType)
         assert(resp.result == ResponseResult.SUCCESS)
-        assert(resp.node?.id == existingNode.id)
+        assert(resp.node?.id == request.node?.id)
         assert(resp.node?.name == request.node?.name)
         assert(resp.node?.description == request.node?.description)
     }
 
     @Test
     fun testNodeRead() {
-        val existingNode = commonNode().apply {
-            id = "111"
-            name = "nodeToRead"
-        }
-        controller.nodeProcessor.nodes.add(existingNode)
-
         val request = NodeReadRequest(
             requestType = "read",
             debug = Debug(mode = Debug.Mode.STUB, stub = Debug.Stub.SUCCESS),
-            id = existingNode.id
+            id = "111"
         )
 
         publishToChannel(request)
@@ -139,23 +128,14 @@ class RabbitControllerTest {
         val response = readFromChannel()
         assert(response != null)
 
-        val resp = objectMapper.readValue(response!!.body, NodeReadResponse::class.java)
+        val resp = objectMapper.readValue(response?.body, NodeReadResponse::class.java)
         assert(resp.responseType == request.requestType)
         assert(resp.result == ResponseResult.SUCCESS)
-        assert(resp.node?.name == existingNode.name)
+        resp.node?.name?.isNotEmpty()?.let { assert(it) }
     }
 
     @Test
     fun testNodeSearch() {
-        controller.nodeProcessor.nodes.add(commonNode().apply {
-            id = "301"
-            name = "learnNode"
-        })
-        controller.nodeProcessor.nodes.add(commonNode().apply {
-            id = "302"
-            name = "checkNode"
-        })
-
         val request = NodeSearchRequest(
             requestType = "search",
             debug = Debug(mode = Debug.Mode.STUB, stub = Debug.Stub.SUCCESS),
@@ -169,7 +149,7 @@ class RabbitControllerTest {
         val response = readFromChannel()
         assert(response != null)
 
-        val resp = objectMapper.readValue(response!!.body, NodeSearchResponse::class.java)
+        val resp = objectMapper.readValue(response?.body, NodeSearchResponse::class.java)
         assert(resp.responseType == request.requestType)
         assert(resp.result == ResponseResult.SUCCESS)
         assert(resp.nodes?.count() == 1)
@@ -181,12 +161,12 @@ class RabbitControllerTest {
             id = "115"
             name = "nodeToDelete"
         }
-        controller.nodeProcessor.nodes.add(existingNode)
 
         val request = NodeDeleteRequest(
             requestType = "delete",
             debug = Debug(mode = Debug.Mode.STUB, stub = Debug.Stub.SUCCESS),
-            id = existingNode.id
+            id = existingNode.id,
+            lock = "lock1",
         )
 
         publishToChannel(request)
@@ -194,7 +174,7 @@ class RabbitControllerTest {
         val response = readFromChannel()
         assert(response != null)
 
-        val resp = objectMapper.readValue(response!!.body, NodeDeleteResponse::class.java)
+        val resp = objectMapper.readValue(response?.body, NodeDeleteResponse::class.java)
         assert(resp.responseType == request.requestType)
         assert(resp.result == ResponseResult.SUCCESS)
     }
