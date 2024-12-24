@@ -10,7 +10,7 @@ open class Node {
     var progress: Int? = null
     var questions: List<Question>? = null
     var lock: String = ""
-
+    
     fun copy(): Node {
         return Node().also { node ->
             node.id = id
