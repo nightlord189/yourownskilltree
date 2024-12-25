@@ -38,6 +38,7 @@ logback = { module = "ch.qos.logback:logback-classic", version = "1.4.11" }
 
 testcontainers-core = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
 testcontainers-rabbitmq = { module = "org.testcontainers:rabbitmq", version.ref = "testcontainers" }
+testcontainers-mongodb = { module = "org.testcontainers:mongodb", version.ref = "testcontainers" }
 testcontainers-junit = {module="org.testcontainers:junit-jupiter", version.ref = "testcontainers"}
 
 [plugins]
