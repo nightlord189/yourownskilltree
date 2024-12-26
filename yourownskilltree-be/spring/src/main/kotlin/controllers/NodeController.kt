@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-import org.aburavov.yourownskilltree.backend.api.model.*
 import org.aburavov.yourownskilltree.backend.api.mappers.*
 import org.aburavov.yourownskilltree.backend.biz.NodeProcessor
 import org.aburavov.yourownskilltree.backend.common.model.NodeContext
@@ -20,7 +19,7 @@ class NodeController (
 ) {
     private val logger = KotlinLogging.logger {}
 
-    fun process (request: IRequest): IResponse {
+    suspend fun process (request: IRequest): IResponse {
         logger.info { "New request: ${request.requestType}" }
         val ctx = NodeContext()
         ctx.fromTransport(request)

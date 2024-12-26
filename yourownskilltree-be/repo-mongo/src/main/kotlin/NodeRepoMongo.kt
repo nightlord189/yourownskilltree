@@ -1,28 +1,46 @@
 import com.mongodb.client.model.Filters
 import com.mongodb.kotlin.client.coroutine.MongoClient
+import com.mongodb.kotlin.client.coroutine.MongoCollection
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.toList
+import mu.KotlinLogging
 import org.aburavov.yourownskilltree.backend.common.model.CommonError
 import org.aburavov.yourownskilltree.backend.common.model.Node
 import org.aburavov.yourownskilltree.backend.common.model.NodeFilter
 import org.bson.conversions.Bson
 import org.bson.types.ObjectId
 import repo.*
+import java.util.*
 
 class NodeRepoMongo (
-    connectionString: String,
-    databaseName: String="master",
+    config: MongoConfig,
     collectionName: String = "nodes"
 ): IRepoNode {
-    private val client = MongoClient.create(connectionString)
-    private val collection = client
-        .getDatabase(databaseName)
-        .getCollection<MongoNode>(collectionName)
+    private val logger = KotlinLogging.logger {}
+
+    private lateinit var client: MongoClient
+    private lateinit var collection: MongoCollection<MongoNode>
+
+    init {
+        println("DEBUG: Initializing MongoDB repository")
+        logger.info { "Initializing MongoDB repository with config: $config, collection: $collectionName" }
+
+        val connString = getConnectionString(config)
+
+        client = MongoClient.create(connString)
+        collection = client
+            .getDatabase(config.database)
+            .getCollection<MongoNode>(collectionName)
+
+        logger.info { "MongoDB client initialized successfully" }
+    }
 
     override suspend fun createNode(node: Node): IDbNodeResponse {
         try {
             val dbEntity = MongoNode.fromCommon(node)
             dbEntity.mongoId = ObjectId()
+            dbEntity.id = UUID.randomUUID().toString()
+            dbEntity.lock = UUID.randomUUID().toString()
             collection.insertOne(dbEntity)
             return DbNodeResponseOk(dbEntity.toCommon())
         } catch (e: Exception) {
@@ -56,11 +74,12 @@ class NodeRepoMongo (
                 return DbNodeResponseErr(CommonError(message = "not found"))
             }
 
-            if (existingEntity?.lock != node.lock) {
+            if (existingEntity.lock != node.lock) {
                 return DbNodeResponseErr(CommonError(message = "invalid lock"))
             }
 
-            dbEntity.mongoId = existingEntity?.mongoId?: ObjectId()
+            dbEntity.mongoId = existingEntity.mongoId ?: ObjectId()
+            dbEntity.lock = UUID.randomUUID().toString() // Обновляем lock при каждом изменении
 
             val result = collection.replaceOne(
                 Filters.and(

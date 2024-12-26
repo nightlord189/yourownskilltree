@@ -19,3 +19,5 @@ logging:
     root: INFO
     org.springframework: INFO
     org.aburavov.yourownskilltree.backend.spring: DEBUG
+    org.mongodb: INFO
+    com.mongodb: INFO

@@ -7,7 +7,7 @@ data class MongoNode(
     @BsonId
     @BsonProperty("_id")
     var mongoId: ObjectId = ObjectId(),
-    val id: String,
+    var id: String,
     val name: String,
     val description: String?,
     val completionType: String,
@@ -15,7 +15,7 @@ data class MongoNode(
     val parentIds: List<String>,
     val progress: Int?,
     val questions: List<MongoQuestion>?,
-    val lock: String
+    var lock: String
 ) {
     companion object {
         fun fromCommon(node: Node): MongoNode = MongoNode(

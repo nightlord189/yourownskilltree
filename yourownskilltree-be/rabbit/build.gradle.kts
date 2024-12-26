@@ -10,6 +10,7 @@ repositories {
 dependencies {
     implementation(libs.rabbitmq.client)
     implementation(libs.kotlin.logging)
+    implementation(libs.coroutines.core)
     implementation(libs.logback)
 
     implementation(libs.jackson.kotlin)
@@ -17,6 +18,8 @@ dependencies {
     implementation(project(":api"))
     implementation(project(":common"))
     implementation(project(":biz"))
+    implementation(project(":repo-inmemory"))
+    implementation(project(":stubs"))
 
     testImplementation(kotlin("test"))
     testImplementation(libs.testcontainers.rabbitmq)

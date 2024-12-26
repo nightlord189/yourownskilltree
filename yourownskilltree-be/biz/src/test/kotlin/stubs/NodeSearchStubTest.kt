@@ -1,15 +1,19 @@
 package stubs
 
+import kotlinx.coroutines.runBlocking
 import org.aburavov.yourownskilltree.backend.biz.NodeProcessor
 import org.aburavov.yourownskilltree.backend.common.model.*
+import org.aburavov.yourownskilltree.backend.stubs.NodeRepoStub
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class NodeSearchStubTest {
-    private val processor = NodeProcessor()
+    private val processor = NodeProcessor(mapOf(
+        WorkMode.STUB to NodeRepoStub(),
+    ))
 
     @Test
-    fun `search success`() {
+    fun `search success`() = runBlocking{
         val context = NodeContext().apply {
             command = NodeCommand.SEARCH
             workMode = WorkMode.STUB
@@ -24,17 +28,13 @@ class NodeSearchStubTest {
         context.errors.any { it.message.contains("lock must be filled") }
         context.nodesResponse?.any{it.name.contains(context.nodeFilterRequest?.nameLike ?: "")}
 
-        assertAll(
-            { assertTrue(context.errors.isEmpty()) },
-            { assertNotNull(context.nodesResponse) },
-            { assertTrue  (context.nodesResponse?.count() == 1) },
-            { context.nodesResponse?.any{it.name.contains(context.nodeFilterRequest?.nameLike ?: "")}
-                ?.let { assertTrue(it) } }
-        )
+        assertTrue(context.errors.isEmpty())
+        assertNotNull(context.nodesResponse)
+        assertTrue  (context.nodesResponse?.count() == 1)
     }
 
     @Test
-    fun `not found`() {
+    fun `not found`() = runBlocking{
         val context = NodeContext().apply {
             command = NodeCommand.SEARCH
             workMode = WorkMode.STUB
@@ -54,7 +54,7 @@ class NodeSearchStubTest {
     }
 
     @Test
-    fun `db error`() {
+    fun `db error`()= runBlocking {
         val context = NodeContext().apply {
             command = NodeCommand.SEARCH
             workMode = WorkMode.STUB

@@ -33,11 +33,12 @@ class NodeRepoMongoTest {
 
     @BeforeEach
     fun setUp() {
-        val connString = mongoDBContainer.getConnectionString()
-        logger.info { "using connection string $connString" }
         repo = NodeRepoMongo(
-            connectionString = connString,
-            databaseName = "test_db"
+            config = MongoConfig(
+                host = mongoDBContainer.host,
+                port = mongoDBContainer.getMappedPort(27017),
+                database = "test_db"
+            ),
         )
     }
 
@@ -74,11 +75,10 @@ class NodeRepoMongoTest {
         assertTrue(result is DbNodeResponseOk)
         result as DbNodeResponseOk
         assertNotNull(result.data)
-        assertEquals(node.id, result.data.id)
         assertEquals(node.name, result.data.name)
 
         // verify changes were persisted
-        val readResult = repo.readNode(node.id)
+        val readResult = repo.readNode(result.data.id)
         assertTrue(readResult is DbNodeResponseOk)
     }
 
@@ -96,7 +96,6 @@ class NodeRepoMongoTest {
         // then
         assertTrue(result is DbNodeResponseOk)
         result as DbNodeResponseOk
-        assertEquals(node.id, result.data.id)
         assertEquals(node.name, result.data.name)
     }
 
@@ -115,10 +114,12 @@ class NodeRepoMongoTest {
     fun `test update node`() = runBlocking {
         // given
         val node = getTestNode()
-        repo.createNode(node)
+        val res = repo.createNode(node)
 
         val updatedNode = node.copy().apply {
+            id = (res as DbNodeResponseOk).data.id
             name = "Updated Name"
+            lock = res.data.lock
         }
 
         // when
@@ -130,21 +131,21 @@ class NodeRepoMongoTest {
         assertEquals(updatedNode.name, updateResult.data.name)
 
         // verify changes were persisted
-        val readResult = repo.readNode(node.id)
+        val readResult = repo.readNode(updatedNode.id)
         assertTrue(readResult is DbNodeResponseOk)
         readResult as DbNodeResponseOk
         assertEquals("Updated Name", readResult.data.name)
-        assertEquals(node.id, readResult.data.id)
-        assertEquals(node.lock, readResult.data.lock)
+        assertNotEquals(updatedNode.lock, readResult.data.lock)
     }
 
     @Test
     fun `test update with invalid lock`() = runBlocking {
         // given
         val node = getTestNode()
-        repo.createNode(node)
+        val res = (repo.createNode(node) as DbNodeResponseOk)
 
         val updatedNode = node.copy().apply {
+            id = res.data.id
             lock = "invalid-lock"
         }
 
@@ -161,10 +162,10 @@ class NodeRepoMongoTest {
     fun `test delete node`() = runBlocking {
         // given
         val node = getTestNode()
-        repo.createNode(node)
+        val res = (repo.createNode(node) as DbNodeResponseOk)
 
         // when
-        val result = repo.deleteNode(node.id, node.lock)
+        val result = repo.deleteNode(res.data.id, res.data.lock)
 
         // then
         assertTrue(result is DbNodeResponseOk)
@@ -178,10 +179,10 @@ class NodeRepoMongoTest {
     fun `test delete with invalid lock`() = runBlocking {
         // given
         val node = getTestNode()
-        repo.createNode(node)
+        val res = (repo.createNode(node) as DbNodeResponseOk)
 
         // when
-        val result = repo.deleteNode(node.id, "invalid-lock")
+        val result = repo.deleteNode(res.data.id, "invalid-lock")
 
         // then
         assertTrue(result is DbNodeResponseErr)
@@ -227,7 +228,6 @@ class NodeRepoMongoTest {
         assertTrue(result is DbNodesResponseOk)
         result as DbNodesResponseOk
         assertEquals(1, result.data.size)
-        assertEquals(node1.id, result.data.first().id)
     }
 
     @Test
@@ -253,7 +253,6 @@ class NodeRepoMongoTest {
         result as DbNodesResponseOk
         assertEquals(1, result.data.size)
         val foundNode = result.data.first()
-        assertEquals(node1.id, foundNode.id)
         assertEquals("Alpha Node", foundNode.name)
         assertTrue(parentId in foundNode.parentIds)
     }

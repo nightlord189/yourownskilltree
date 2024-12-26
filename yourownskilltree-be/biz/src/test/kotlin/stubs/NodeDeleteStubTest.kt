@@ -1,18 +1,22 @@
 package stubs
 
+import kotlinx.coroutines.runBlocking
 import org.aburavov.yourownskilltree.backend.biz.NodeProcessor
 import org.aburavov.yourownskilltree.backend.common.model.NodeCommand
 import org.aburavov.yourownskilltree.backend.common.model.NodeContext
 import org.aburavov.yourownskilltree.backend.common.model.NodeStubs
 import org.aburavov.yourownskilltree.backend.common.model.WorkMode
+import org.aburavov.yourownskilltree.backend.stubs.NodeRepoStub
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class NodeDeleteStubTest {
-    private val processor = NodeProcessor()
+    private val processor = NodeProcessor(mapOf(
+        WorkMode.STUB to NodeRepoStub(),
+    ))
 
     @Test
-    fun `delete success`() {
+    fun `delete success`() = runBlocking{
         val context = NodeContext().apply {
             command = NodeCommand.DELETE
             workMode = WorkMode.STUB
@@ -33,7 +37,7 @@ class NodeDeleteStubTest {
     }
 
     @Test
-    fun `not found`() {
+    fun `not found`() = runBlocking{
         val context = NodeContext().apply {
             command = NodeCommand.DELETE
             workMode = WorkMode.STUB
@@ -51,7 +55,7 @@ class NodeDeleteStubTest {
     }
 
     @Test
-    fun `bad id`() {
+    fun `bad id`() = runBlocking{
         val context = NodeContext().apply {
             command = NodeCommand.DELETE
             workMode = WorkMode.STUB
@@ -69,7 +73,7 @@ class NodeDeleteStubTest {
     }
 
     @Test
-    fun `cannot delete`() {
+    fun `cannot delete`()= runBlocking {
         val context = NodeContext().apply {
             command = NodeCommand.DELETE
             workMode = WorkMode.STUB
@@ -87,7 +91,7 @@ class NodeDeleteStubTest {
     }
 
     @Test
-    fun `db error`() {
+    fun `db error`() = runBlocking{
         val context = NodeContext().apply {
             command = NodeCommand.DELETE
             workMode = WorkMode.STUB

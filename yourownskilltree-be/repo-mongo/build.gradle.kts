@@ -11,6 +11,9 @@ dependencies {
     implementation(project(":common"))
 
     implementation(libs.mongodb.driver.coroutine)
+    implementation(libs.mongodb.driver.reactivestreams)
+    implementation(libs.mongodb.driver.core)
+    implementation(libs.mongodb.driver.sync)
 
     implementation(libs.kotlin.logging)
     implementation(libs.logback)

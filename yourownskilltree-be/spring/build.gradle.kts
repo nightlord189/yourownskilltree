@@ -15,10 +15,14 @@ dependencies {
     implementation(libs.coroutines.reactor)
 
     implementation(libs.kotlin.logging)
+    implementation(libs.logback)
 
     implementation(project(":api"))
     implementation(project(":common"))
     implementation(project(":biz"))
+    implementation(project(":repo-mongo"))
+    implementation(project(":repo-inmemory"))
+    implementation(project(":stubs"))
 
     testImplementation(libs.spring.test)
 }
