@@ -16,7 +16,7 @@ class NodeProcessor (
     private val logger = KotlinLogging.logger {}
 
     suspend fun process(ctx: NodeContext) {
-        logger.info { "processing NodeContext with workMode ${ctx.workMode} and command ${ctx.command}" }
+        logger.info { "processing NodeContext with workMode ${ctx.workMode}, stub ${ctx.stubCase} and command ${ctx.command}" }
 
         val repo = repos[ctx.workMode]
         if (repo == null) {
@@ -31,7 +31,6 @@ class NodeProcessor (
                     Validator(::validateName),
                     Validator(::validateBusiness),
                     ValidatorFinish(),
-                    UnsupportedStub(NodeStubs.NONE),
                     UnsupportedStub(NodeStubs.NOT_FOUND),
                     UnsupportedStub(NodeStubs.BAD_ID),
                     UnsupportedStub(NodeStubs.CANNOT_DELETE),
@@ -43,7 +42,6 @@ class NodeProcessor (
                 Chain<NodeContext>(
                     Validator(::validateIdRequest),
                     ValidatorFinish(),
-                    UnsupportedStub(NodeStubs.NONE),
                     UnsupportedStub(NodeStubs.CANNOT_DELETE),
                     StubNotFoundError(),
                     StubBadIdError(),
@@ -59,7 +57,6 @@ class NodeProcessor (
                     Validator(::validateBusiness),
                     Validator(::validateLock),
                     ValidatorFinish(),
-                    UnsupportedStub(NodeStubs.NONE),
                     UnsupportedStub(NodeStubs.CANNOT_DELETE),
                     StubNotFoundError(),
                     StubBadIdError(),
@@ -72,7 +69,6 @@ class NodeProcessor (
                     Validator(::validateIdRequest),
                     Validator(::validateLockRequest),
                     ValidatorFinish(),
-                    UnsupportedStub(NodeStubs.NONE),
                     StubNotFoundError(),
                     StubBadIdError(),
                     StubCannotDeleteError(),
@@ -84,7 +80,6 @@ class NodeProcessor (
                 Chain<NodeContext>(
                     Validator(::validateFilter),
                     ValidatorFinish(),
-                    UnsupportedStub(NodeStubs.NONE),
                     UnsupportedStub(NodeStubs.BAD_ID),
                     UnsupportedStub(NodeStubs.CANNOT_DELETE),
                     StubNotFoundError(),
