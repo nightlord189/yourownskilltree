@@ -9,6 +9,7 @@ repositories {
 
 dependencies {
     implementation(project(":common"))
+    testImplementation(project(":repo-tests"))
 
     implementation(libs.kotlin.logging)
 

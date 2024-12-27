@@ -57,11 +57,11 @@ class NodeRepoInMemory (existingNodes: MutableList<Node> = mutableListOf()): IRe
         val filtered = nodes.toList().
         filter {
             node -> if (filter.parentId != null)
-            node.parentIds.contains(filter.parentId?:"")
+            node.parentIds.contains(filter.parentId ?: "")
             else true
         }.filter {
             node -> if (filter.nameLike != null)
-                node.name.contains(filter.nameLike?:"")
+                node.name.contains(filter.nameLike ?: "", ignoreCase = true)
             else true
         }
         return DbNodesResponseOk(filtered)
