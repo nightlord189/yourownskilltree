@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 
 class MappersTest {
-
     @Test
     fun fromTransport () {
         val request = NodeCreateRequest(

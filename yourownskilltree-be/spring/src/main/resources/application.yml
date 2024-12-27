@@ -1,6 +1,13 @@
 server:
   port: 8080
 
+mongo:
+  host: localhost
+  port: 27017
+  user: ""
+  password: ""
+  database: master
+
 management:
   endpoint:
     env:
@@ -19,3 +26,5 @@ logging:
     root: INFO
     org.springframework: INFO
     org.aburavov.yourownskilltree.backend.spring: DEBUG
+    org.mongodb: INFO
+    com.mongodb: INFO

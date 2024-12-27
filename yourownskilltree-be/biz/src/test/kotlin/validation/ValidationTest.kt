@@ -1,5 +1,6 @@
 package validation
 
+import kotlinx.coroutines.runBlocking
 import org.aburavov.yourownskilltree.backend.biz.validation.*
 import org.aburavov.yourownskilltree.backend.common.model.*
 import org.aburavov.yourownskilltree.backend.cor.Chain
@@ -14,7 +15,7 @@ class ValidationTest {
     @Nested
     inner class NameValidation {
         @Test
-        fun `valid name`() {
+        fun `valid name`()= runBlocking {
             val context = NodeContext().apply {
                 nodeRequest = Node().apply {
                     name = "name1"
@@ -25,7 +26,7 @@ class ValidationTest {
         }
 
         @Test
-        fun `invalid name`() {
+        fun `invalid name`()= runBlocking {
             val context = NodeContext().apply {
                 nodeRequest = Node()
             }
@@ -38,7 +39,7 @@ class ValidationTest {
     @Nested
     inner class IdValidation {
         @Test
-        fun `valid id`() {
+        fun `valid id`()= runBlocking {
             val context = NodeContext().apply {
                 nodeRequest = Node().apply {
                     id = "id1"
@@ -49,7 +50,7 @@ class ValidationTest {
         }
 
         @Test
-        fun `invalid id`() {
+        fun `invalid id`() = runBlocking{
             val context = NodeContext().apply {
                 nodeRequest = Node()
             }
@@ -59,7 +60,7 @@ class ValidationTest {
         }
 
         @Test
-        fun `valid id from request`() {
+        fun `valid id from request`()= runBlocking {
             val context = NodeContext().apply {
                 nodeIdRequest = "id1"
             }
@@ -68,7 +69,7 @@ class ValidationTest {
         }
 
         @Test
-        fun `invalid id from request`() {
+        fun `invalid id from request`() = runBlocking{
             val context = NodeContext()
             makeChain(Validator(::validateIdRequest)).run(context)
             assertTrue(context.errors.count() == 1)
@@ -79,7 +80,7 @@ class ValidationTest {
     @Nested
     inner class LockValidation {
         @Test
-        fun `valid lock`() {
+        fun `valid lock`() = runBlocking{
             val context = NodeContext().apply {
                 nodeRequest = Node().apply {
                     lock = "lock"
@@ -90,7 +91,7 @@ class ValidationTest {
         }
 
         @Test
-        fun `invalid lock`() {
+        fun `invalid lock`() = runBlocking{
             val context = NodeContext().apply {
                 nodeRequest = Node()
             }
@@ -100,7 +101,7 @@ class ValidationTest {
         }
 
         @Test
-        fun `valid lock from request`() {
+        fun `valid lock from request`() = runBlocking{
             val context = NodeContext().apply {
                 nodeLock = "lock1"
             }
@@ -109,7 +110,7 @@ class ValidationTest {
         }
 
         @Test
-        fun `invalid lock from request`() {
+        fun `invalid lock from request`() = runBlocking{
             val context = NodeContext()
             makeChain(Validator(::validateLockRequest)).run(context)
             assertTrue(context.errors.count() == 1)
@@ -120,7 +121,7 @@ class ValidationTest {
     @Nested
     inner class FilterValidation {
         @Test
-        fun `valid filter`() {
+        fun `valid filter`() = runBlocking{
             val context = NodeContext().apply {
                 nodeFilterRequest = NodeFilter(parentId = "parent1")
             }
@@ -129,7 +130,7 @@ class ValidationTest {
         }
 
         @Test
-        fun `invalid filter`() {
+        fun `invalid filter`() = runBlocking{
             val context = NodeContext().apply {
                 nodeFilterRequest = NodeFilter()
             }
@@ -139,7 +140,7 @@ class ValidationTest {
         }
 
         @Test
-        fun `empty filter`() {
+        fun `empty filter`()= runBlocking {
             val context = NodeContext()
             makeChain(Validator(::validateFilter)).run(context)
             assertTrue(context.errors.count() == 1)
@@ -150,7 +151,7 @@ class ValidationTest {
     @Nested
     inner class BusinessDataValidation {
         @Test
-        fun `valid business data`() {
+        fun `valid business data`()= runBlocking {
             val context = NodeContext().apply {
                 nodeRequest = Node().apply {
                     completionType = NodeCompletionType.TEST
@@ -164,7 +165,7 @@ class ValidationTest {
         }
 
         @Test
-        fun `invalid business data - percentage`() {
+        fun `invalid business data - percentage`() = runBlocking{
             val context = NodeContext().apply {
                 nodeRequest = Node().apply {
                     completionType = NodeCompletionType.PERCENTAGE
@@ -177,7 +178,7 @@ class ValidationTest {
         }
 
         @Test
-        fun `invalid business data - test questions`() {
+        fun `invalid business data - test questions`() = runBlocking{
             val context = NodeContext().apply {
                 nodeRequest = Node().apply {
                     completionType = NodeCompletionType.TEST

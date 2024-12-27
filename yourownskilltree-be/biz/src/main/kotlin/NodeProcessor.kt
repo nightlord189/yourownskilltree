@@ -1,25 +1,27 @@
 package org.aburavov.yourownskilltree.backend.biz
 
 import mu.KotlinLogging
-import org.aburavov.yourownskilltree.backend.biz.stubs.*
+import org.aburavov.yourownskilltree.backend.stubs.*
+import org.aburavov.yourownskilltree.backend.biz.repo.*
 import org.aburavov.yourownskilltree.backend.biz.validation.*
 import org.aburavov.yourownskilltree.backend.common.model.*
 import org.aburavov.yourownskilltree.backend.cor.Chain
-import org.aburavov.yourownskilltree.backend.cor.Worker
-import java.util.*
+import repo.IRepoNode
 
-class NodeProcessor {
+class NodeProcessor (
+    private val repos: Map<WorkMode, IRepoNode> = mapOf(
+        WorkMode.STUB to NodeRepoStub(),
+    ),
+) {
     private val logger = KotlinLogging.logger {}
 
-    fun process(ctx: NodeContext) {
-        logger.info { "processing NodeContext with workMode ${ctx.workMode} and command ${ctx.command}" }
+    suspend fun process(ctx: NodeContext) {
+        logger.info { "processing NodeContext with workMode ${ctx.workMode}, stub ${ctx.stubCase} and command ${ctx.command}" }
 
-        when (ctx.workMode) {
-            WorkMode.PROD, WorkMode.TEST -> {
-                ctx.errors.add(CommonError(message="unsupported workMode"))
-                return
-            }
-            WorkMode.STUB -> {}
+        val repo = repos[ctx.workMode]
+        if (repo == null) {
+            ctx.addError("repo is null")
+            return
         }
 
         when (ctx.command) {
@@ -29,24 +31,22 @@ class NodeProcessor {
                     Validator(::validateName),
                     Validator(::validateBusiness),
                     ValidatorFinish(),
-                    UnsupportedStub(NodeStubs.NONE),
                     UnsupportedStub(NodeStubs.NOT_FOUND),
                     UnsupportedStub(NodeStubs.BAD_ID),
                     UnsupportedStub(NodeStubs.CANNOT_DELETE),
                     StubDbError(),
-                    StubSuccessCreate(),
+                    RepoCreate(repo),
                 ).run(ctx)
             }
             NodeCommand.READ -> {
                 Chain<NodeContext>(
                     Validator(::validateIdRequest),
                     ValidatorFinish(),
-                    UnsupportedStub(NodeStubs.NONE),
                     UnsupportedStub(NodeStubs.CANNOT_DELETE),
                     StubNotFoundError(),
                     StubBadIdError(),
                     StubDbError(),
-                    StubSuccessRead()
+                    RepoRead(repo),
                 ).run(ctx)
             }
             NodeCommand.UPDATE -> {
@@ -57,12 +57,11 @@ class NodeProcessor {
                     Validator(::validateBusiness),
                     Validator(::validateLock),
                     ValidatorFinish(),
-                    UnsupportedStub(NodeStubs.NONE),
                     UnsupportedStub(NodeStubs.CANNOT_DELETE),
                     StubNotFoundError(),
                     StubBadIdError(),
                     StubDbError(),
-                    StubSuccessUpdate()
+                    RepoUpdate(repo),
                 ).run(ctx)
             }
             NodeCommand.DELETE -> {
@@ -70,24 +69,22 @@ class NodeProcessor {
                     Validator(::validateIdRequest),
                     Validator(::validateLockRequest),
                     ValidatorFinish(),
-                    UnsupportedStub(NodeStubs.NONE),
                     StubNotFoundError(),
                     StubBadIdError(),
                     StubCannotDeleteError(),
                     StubDbError(),
-                    StubSuccessDelete(),
+                    RepoDelete(repo),
                 ).run(ctx)
             }
             NodeCommand.SEARCH -> {
                 Chain<NodeContext>(
                     Validator(::validateFilter),
                     ValidatorFinish(),
-                    UnsupportedStub(NodeStubs.NONE),
                     UnsupportedStub(NodeStubs.BAD_ID),
                     UnsupportedStub(NodeStubs.CANNOT_DELETE),
                     StubNotFoundError(),
                     StubDbError(),
-                    StubSuccessSearch()
+                    RepoSearch(repo),
                 ).run(ctx)
             }
             NodeCommand.NONE -> throw Exception("unknown command")

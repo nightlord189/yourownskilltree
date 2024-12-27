@@ -1,20 +1,24 @@
 package org.aburavov.yourownskilltree.backend.biz
 
+import kotlinx.coroutines.runBlocking
 import org.aburavov.yourownskilltree.backend.common.model.*
+import org.aburavov.yourownskilltree.backend.stubs.NodeRepoStub
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 
 class NodeCreateStubTest {
-    private val processor = NodeProcessor()
+    private val processor = NodeProcessor(mapOf(
+        WorkMode.STUB to NodeRepoStub(),
+    ))
 
     @Test
-    fun `create success`() {
+    fun `create success`() = runBlocking {
         val context = NodeContext().apply {
             command = NodeCommand.CREATE
             workMode = WorkMode.STUB
             stubCase = NodeStubs.SUCCESS
             nodeRequest = Node().apply {
-                name = "Test Node"
+                name = "Node 1"
             }
         }
 
@@ -30,7 +34,7 @@ class NodeCreateStubTest {
     }
 
     @Test
-    fun `db error`() {
+    fun `db error`() = runBlocking {
         val context = NodeContext().apply {
             command = NodeCommand.CREATE
             workMode = WorkMode.STUB

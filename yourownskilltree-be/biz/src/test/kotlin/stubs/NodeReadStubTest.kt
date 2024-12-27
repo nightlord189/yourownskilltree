@@ -1,15 +1,19 @@
 package stubs
 
+import kotlinx.coroutines.runBlocking
 import org.aburavov.yourownskilltree.backend.biz.NodeProcessor
 import org.aburavov.yourownskilltree.backend.common.model.*
+import org.aburavov.yourownskilltree.backend.stubs.NodeRepoStub
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class NodeReadStubTest {
-    private val processor = NodeProcessor()
+    private val processor = NodeProcessor(mapOf(
+        WorkMode.STUB to NodeRepoStub(),
+    ))
 
     @Test
-    fun `read success`() {
+    fun `read success`() = runBlocking{
         val context = NodeContext().apply {
             command = NodeCommand.READ
             workMode = WorkMode.STUB
@@ -29,7 +33,7 @@ class NodeReadStubTest {
     }
 
     @Test
-    fun `not found`() {
+    fun `not found`() = runBlocking{
         val context = NodeContext().apply {
             command = NodeCommand.READ
             workMode = WorkMode.STUB
@@ -46,7 +50,7 @@ class NodeReadStubTest {
     }
 
     @Test
-    fun `bad id`() {
+    fun `bad id`() = runBlocking{
         val context = NodeContext().apply {
             command = NodeCommand.READ
             workMode = WorkMode.STUB
@@ -63,7 +67,7 @@ class NodeReadStubTest {
     }
 
     @Test
-    fun `db error`() {
+    fun `db error`() = runBlocking{
         val context = NodeContext().apply {
             command = NodeCommand.READ
             workMode = WorkMode.STUB

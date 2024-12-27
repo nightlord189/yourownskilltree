@@ -9,7 +9,7 @@ class NodeContext: RequestContext() {
     var nodeLock: String? = null // for delete case
 
     var nodeResponse: Node? = null
-    var nodesResponse: MutableList<Node>? = null
+    var nodesResponse: List<Node>? = null
 
     fun addError(msg: String) {
         errors.add(CommonError().apply { message = msg })

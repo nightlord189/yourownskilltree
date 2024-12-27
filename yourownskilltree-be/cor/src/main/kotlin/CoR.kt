@@ -4,12 +4,12 @@ abstract class Worker<T> {
     /**
      * возвращает True, если может обработать объект
      */
-    abstract fun on (ctx: T): Boolean
+    abstract suspend fun on (ctx: T): Boolean
 
     /**
     * возвращает True, если цепочка может быть продолжена или False, если она должна быть остановлена на этом обработчике
     */
-    abstract fun handle (ctx: T): Boolean
+    abstract suspend fun handle (ctx: T): Boolean
 }
 
 /**
@@ -18,7 +18,7 @@ abstract class Worker<T> {
 class Chain<T>(vararg workers: Worker<T>) {
     private val workers: List<Worker<T>> = workers.toList()
 
-    fun run (ctx: T) {
+    suspend fun run (ctx: T) {
         var idx = 0
 
         while (idx < workers.count()) {

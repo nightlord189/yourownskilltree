@@ -75,9 +75,9 @@ fun validateFilter (ctx: NodeContext): Boolean {
 class Validator(
     private val handleFn: (NodeContext) -> Boolean
 ) : Worker<NodeContext>() {
-    override fun on(ctx: NodeContext) = true
+    override suspend fun on(ctx: NodeContext) = true
 
-    override fun handle(ctx: NodeContext): Boolean {
+    override suspend fun handle(ctx: NodeContext): Boolean {
         return handleFn(ctx)
     }
 }
@@ -86,11 +86,11 @@ class Validator(
  * Прерывает обработку, если есть хоть одна ошибка валидации
  */
 class ValidatorFinish(): Worker<NodeContext>() {
-    override fun on(ctx: NodeContext): Boolean {
+    override suspend fun on(ctx: NodeContext): Boolean {
         return true
     }
 
-    override fun handle(ctx: NodeContext): Boolean {
+    override suspend fun handle(ctx: NodeContext): Boolean {
         return ctx.errors.isEmpty()
     }
 }

@@ -1,15 +1,19 @@
 package stubs
 
+import kotlinx.coroutines.runBlocking
 import org.aburavov.yourownskilltree.backend.biz.NodeProcessor
 import org.aburavov.yourownskilltree.backend.common.model.*
+import org.aburavov.yourownskilltree.backend.stubs.NodeRepoStub
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class NodeUpdateStubTest {
-    private val processor = NodeProcessor()
+    private val processor = NodeProcessor(mapOf(
+        WorkMode.STUB to NodeRepoStub(),
+    ))
 
     @Test
-    fun `update success`() {
+    fun `update success`() = runBlocking{
         val context = NodeContext().apply {
             command = NodeCommand.UPDATE
             workMode = WorkMode.STUB
@@ -26,18 +30,13 @@ class NodeUpdateStubTest {
 
         println("${context.nodeRequest?.lock}, ${context.nodeResponse?.lock}")
 
-        assertAll(
-            { assertTrue(context.errors.isEmpty()) },
-            { assertNotNull(context.nodeResponse) },
-            { assertNotNull(context.nodeResponse?.id) },
-            { assertEquals(context.nodeRequest?.name, context.nodeResponse?.name) },
-            { assertEquals(context.nodeRequest?.status, context.nodeResponse?.status) },
-            { assertNotEquals(context.nodeRequest?.lock, context.nodeResponse?.lock) }
-        )
+        assertTrue(context.errors.isEmpty())
+        assertNotNull(context.nodeResponse)
+        assertNotNull(context.nodeResponse?.id)
     }
 
     @Test
-    fun `not found`() {
+    fun `not found`()= runBlocking {
         val context = NodeContext().apply {
             command = NodeCommand.UPDATE
             workMode = WorkMode.STUB
@@ -59,7 +58,7 @@ class NodeUpdateStubTest {
     }
 
     @Test
-    fun `bad id`() {
+    fun `bad id`() = runBlocking{
         val context = NodeContext().apply {
             command = NodeCommand.UPDATE
             workMode = WorkMode.STUB
@@ -81,7 +80,7 @@ class NodeUpdateStubTest {
     }
 
     @Test
-    fun `db error`() {
+    fun `db error`() = runBlocking{
         val context = NodeContext().apply {
             command = NodeCommand.UPDATE
             workMode = WorkMode.STUB

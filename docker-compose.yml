@@ -1,29 +1,15 @@
 version: '3.8'
 
 services:
-  backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: yourownskilltree-backend
-    depends_on:
-      - db
-      - opensearch
-      - keycloak
+  mongodb:
+    image: mongo:6.0
+    container_name: mongodb
     ports:
-      - "8080:8080"  # Порт приложения, если используется HTTP
-
-  db:
-    image: postgres:15
-    container_name: postgres-db
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: yourownskilltree
-    ports:
-      - "5432:5432"
+      - "27017:27017"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=master
 
   opensearch:
     image: opensearchproject/opensearch:2.10.0
@@ -34,9 +20,20 @@ services:
       OPENSEARCH_JAVA_OPTS: "-Xms512m -Xmx512m"
     ports:
       - "9200:9200"
-      - "9600:9600"  # для мониторинга
+      - "9600:9600"
     volumes:
       - opensearch_data:/usr/share/opensearch/data
+
+  # Для Keycloak оставляем PostgreSQL, так как он не поддерживает MongoDB
+  keycloak_db:
+    image: postgres:15
+    container_name: keycloak-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: keycloak
+    volumes:
+      - keycloak_postgres_data:/var/lib/postgresql/data
 
   keycloak:
     image: quay.io/keycloak/keycloak:22.0
@@ -45,14 +42,17 @@ services:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
       DB_VENDOR: POSTGRES
-      DB_ADDR: db
-      DB_DATABASE: yourownskilltree
+      DB_ADDR: keycloak_db
+      DB_DATABASE: keycloak
       DB_USER: postgres
       DB_PASSWORD: 123456
     command: start-dev
     ports:
-      - "8081:8080"  # Порт для Keycloak
+      - "8081:8080"
+    depends_on:
+      - keycloak_db
 
 volumes:
-  postgres_data:
+  mongodb_data:
   opensearch_data:
+  keycloak_postgres_data:
