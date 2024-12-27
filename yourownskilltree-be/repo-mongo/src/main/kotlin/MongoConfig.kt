@@ -1,4 +1,5 @@
-// TODO: загружать из файла конфигурации
+package org.aburavov.yourownskilltree.backend.repo.mongo
+
 data class MongoConfig(
     var host: String = "localhost",
     var port: Int = 27017,

@@ -13,6 +13,14 @@ jvm-compiler = "17"
 jvm-language = "21"
 
 [libraries]
+spring = { module = "org.springframework.boot:spring-boot-starter" }
+spring-configuration-processor = { module = "org.springframework.boot:spring-boot-configuration-processor" }
+spring-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
+spring-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux" }
+spring-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+
+spring-webflux-ui = { module = "org.springdoc:springdoc-openapi-starter-webflux-ui", version = "2.3.0" }
+
 mongodb-driver-coroutine = {module = "org.mongodb:mongodb-driver-kotlin-coroutine", version.ref = "mongodb"}
 mongodb-driver-reactivestreams = {module = "org.mongodb:mongodb-driver-reactivestreams", version.ref = "mongodb"}
 mongodb-driver-core = {module = "org.mongodb:mongodb-driver-core", version.ref = "mongodb"}
@@ -26,10 +34,7 @@ coroutines-reactor = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reacto
 coroutines-reactive = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactive", version.ref = "coroutines" }
 plugin-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 plugin-binaryCompatibilityValidator = "org.jetbrains.kotlinx:binary-compatibility-validator:0.13.2"
-spring-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
-spring-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux" }
-spring-webflux-ui = { module = "org.springdoc:springdoc-openapi-starter-webflux-ui", version = "2.3.0" }
-spring-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+
 jackson-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
 jackson-jsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson" }
 swagger-annotations = { module = "io.swagger.core.v3:swagger-annotations", version = "2.2.20" }

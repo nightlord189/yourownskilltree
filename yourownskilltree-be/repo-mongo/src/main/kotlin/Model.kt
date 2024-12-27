@@ -1,3 +1,5 @@
+package org.aburavov.yourownskilltree.backend.repo.mongo
+
 import org.aburavov.yourownskilltree.backend.common.model.*
 import org.bson.types.ObjectId
 import org.bson.codecs.pojo.annotations.BsonId

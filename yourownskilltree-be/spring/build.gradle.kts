@@ -7,9 +7,12 @@ plugins {
 }
 
 dependencies {
+    implementation(libs.spring)
+    implementation(libs.spring.configuration.processor)
     implementation(libs.spring.actuator)
     implementation(libs.spring.webflux)
     implementation(libs.spring.webflux.ui)
+
     implementation(libs.jackson.kotlin)
     implementation(libs.coroutines.core)
     implementation(libs.coroutines.reactor)

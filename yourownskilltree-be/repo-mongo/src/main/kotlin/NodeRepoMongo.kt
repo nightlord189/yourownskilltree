@@ -1,3 +1,5 @@
+package org.aburavov.yourownskilltree.backend.repo.mongo
+
 import com.mongodb.client.model.Filters
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import com.mongodb.kotlin.client.coroutine.MongoCollection
