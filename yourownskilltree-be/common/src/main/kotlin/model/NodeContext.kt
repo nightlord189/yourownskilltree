@@ -1,7 +1,12 @@
 package org.aburavov.yourownskilltree.backend.common.model
 
+import permissions.UserGroups
+
 class NodeContext: RequestContext() {
     var command: NodeCommand = NodeCommand.NONE
+
+    var userId: String? = null
+    var userGroup: UserGroups = UserGroups.GUEST
 
     var nodeRequest: Node? = null
     var nodeFilterRequest: NodeFilter? = null

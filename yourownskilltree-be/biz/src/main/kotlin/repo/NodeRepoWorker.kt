@@ -10,6 +10,7 @@ class RepoCreate (private val repo: IRepoNode): Worker<NodeContext>() {
     }
 
     override suspend fun handle(ctx: NodeContext): Boolean {
+        ctx.nodeRequest?.ownerId = ctx.userId ?: ""
         val result = repo.createNode(ctx.nodeRequest?: Node())
         when (result) {
             is DbNodeResponseOk -> {
