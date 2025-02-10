@@ -12,15 +12,13 @@ class RepoCreate (private val repo: IRepoNode): Worker<NodeContext>() {
     override suspend fun handle(ctx: NodeContext): Boolean {
         ctx.nodeRequest?.ownerId = ctx.userId ?: ""
         val result = repo.createNode(ctx.nodeRequest?: Node())
-        when (result) {
-            is DbNodeResponseOk -> {
-                ctx.nodeResponse = result.data
-                return true
-            }
-            is DbNodeResponseErr -> {
-                ctx.errors.addAll(result.errors)
-                return false
-            }
+
+        if (result.errors.isEmpty()) {
+            ctx.nodeResponse = result.data
+            return true
+        } else {
+            ctx.errors.addAll(result.errors)
+            return false
         }
     }
 }
@@ -32,15 +30,13 @@ class RepoRead (private val repo: IRepoNode): Worker<NodeContext>() {
 
     override suspend fun handle(ctx: NodeContext): Boolean {
         val result = repo.readNode(ctx.nodeIdRequest?:"")
-        when (result) {
-            is DbNodeResponseOk -> {
-                ctx.nodeResponse = result.data
-                return true
-            }
-            is DbNodeResponseErr -> {
-                ctx.errors.addAll(result.errors)
-                return false
-            }
+
+        if (result.errors.isEmpty()) {
+            ctx.nodeResponse = result.data
+            return true
+        } else {
+            ctx.errors.addAll(result.errors)
+            return false
         }
     }
 }
@@ -52,15 +48,13 @@ class RepoUpdate (private val repo: IRepoNode): Worker<NodeContext>() {
 
     override suspend fun handle(ctx: NodeContext): Boolean {
         val result = repo.updateNode(ctx.nodeRequest?:Node())
-        when (result) {
-            is DbNodeResponseOk -> {
-                ctx.nodeResponse = result.data
-                return true
-            }
-            is DbNodeResponseErr -> {
-                ctx.errors.addAll(result.errors)
-                return false
-            }
+
+        if (result.errors.isEmpty()) {
+            ctx.nodeResponse = result.data
+            return true
+        } else {
+            ctx.errors.addAll(result.errors)
+            return false
         }
     }
 }
@@ -72,15 +66,13 @@ class RepoDelete (private val repo: IRepoNode): Worker<NodeContext>() {
 
     override suspend fun handle(ctx: NodeContext): Boolean {
         val result = repo.deleteNode(ctx.nodeIdRequest?:"", ctx.nodeLock?:"")
-        when (result) {
-            is DbNodeResponseOk -> {
-                ctx.nodeResponse = result.data
-                return true
-            }
-            is DbNodeResponseErr -> {
-                ctx.errors.addAll(result.errors)
-                return false
-            }
+
+        if (result.errors.isEmpty()) {
+            ctx.nodeResponse = result.data
+            return true
+        } else {
+            ctx.errors.addAll(result.errors)
+            return false
         }
     }
 }
@@ -92,15 +84,13 @@ class RepoSearch (private val repo: IRepoNode): Worker<NodeContext>() {
 
     override suspend fun handle(ctx: NodeContext): Boolean {
         val result = repo.searchNode(ctx.nodeFilterRequest?:NodeFilter())
-        when (result) {
-            is DbNodesResponseOk -> {
-                ctx.nodesResponse = result.data
-                return true
-            }
-            is DbNodesResponseErr -> {
-                ctx.errors.addAll(result.errors)
-                return false
-            }
+
+        if (result.errors.isEmpty()) {
+            ctx.nodesResponse = result.data
+            return true
+        } else {
+            ctx.errors.addAll(result.errors)
+            return false
         }
     }
 }

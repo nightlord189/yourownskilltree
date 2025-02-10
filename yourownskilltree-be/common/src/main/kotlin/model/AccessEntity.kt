@@ -4,9 +4,8 @@ import permissions.NodeAccessLevel
 import java.time.LocalDateTime
 
 data class AccessEntity(
-    val id: String,
-    val resourceId: String,
     val userId: String,
+    val resourceId: String,
     val accessLevel: NodeAccessLevel,
     val grantedAt: LocalDateTime
 )

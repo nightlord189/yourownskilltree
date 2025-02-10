@@ -20,24 +20,24 @@ class NodeRepoStub: IRepoNode {
         lock = UUID.randomUUID().toString()
     }
 
-    override suspend fun createNode(node: Node): IDbNodeResponse {
-        return DbNodeResponseOk(data = stubNode)
+    override suspend fun createNode(node: Node): DbNodeResponse {
+        return DbNodeResponse(data = stubNode)
     }
 
-    override suspend fun readNode(id: String): IDbNodeResponse {
-        return DbNodeResponseOk(data = stubNode)
+    override suspend fun readNode(id: String): DbNodeResponse {
+        return DbNodeResponse(data = stubNode)
     }
 
-    override suspend fun updateNode(node: Node): IDbNodeResponse {
-        return DbNodeResponseOk(data = stubNode)
+    override suspend fun updateNode(node: Node): DbNodeResponse {
+        return DbNodeResponse(data = stubNode)
     }
 
-    override suspend fun deleteNode(id: String, lock: String): IDbNodeResponse {
-        return DbNodeResponseOk(data = stubNode)
+    override suspend fun deleteNode(id: String, lock: String): DbNodeResponse {
+        return DbNodeResponse(data = stubNode)
     }
 
-    override suspend fun searchNode(filter: NodeFilter): IDbNodesResponse {
-        return DbNodesResponseOk(data = listOf(stubNode))
+    override suspend fun searchNode(filter: NodeFilter): DbNodesResponse {
+        return DbNodesResponse(data = listOf(stubNode))
     }
 
 }

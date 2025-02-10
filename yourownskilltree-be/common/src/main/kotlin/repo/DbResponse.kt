@@ -1,30 +1,26 @@
 package repo
 
+import model.AccessEntity
 import org.aburavov.yourownskilltree.backend.common.model.CommonError
 import org.aburavov.yourownskilltree.backend.common.model.Node
 
-sealed interface IDbResponse<T>
 
-sealed interface IDbNodeResponse: IDbResponse<Node>
-sealed interface IDbNodesResponse: IDbResponse<List<Node>>
-
-data class DbNodeResponseOk(
-    val data: Node
-): IDbNodeResponse
-
-data class DbNodeResponseErr(
-    val errors: List<CommonError> = emptyList()
-): IDbNodeResponse {
-    constructor(err: CommonError): this(listOf(err))
+interface DbResponse<T> {
+    val data: T?
+    val errors: List<CommonError>
 }
 
-data class DbNodesResponseOk(
-    val data: List<Node>
-): IDbNodesResponse
+data class DbNodeResponse(
+    override val data: Node? = null,
+    override val errors: List<CommonError> = emptyList()
+) : DbResponse<Node>
 
-data class DbNodesResponseErr(
-    val errors: List<CommonError> = emptyList()
-): IDbNodesResponse {
-    constructor(err: CommonError): this(listOf(err))
-}
+data class DbNodesResponse(
+    override val data: List<Node>? = null,
+    override val errors: List<CommonError> = emptyList()
+) : DbResponse<List<Node>>
 
+data class DbAccessEntityResponse(
+    override val data: AccessEntity? = null,
+    override val errors: List<CommonError> = emptyList()
+) : DbResponse<AccessEntity>

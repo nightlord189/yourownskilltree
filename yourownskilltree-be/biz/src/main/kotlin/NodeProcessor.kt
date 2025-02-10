@@ -8,11 +8,15 @@ import org.aburavov.yourownskilltree.backend.biz.repo.*
 import org.aburavov.yourownskilltree.backend.biz.validation.*
 import org.aburavov.yourownskilltree.backend.common.model.*
 import org.aburavov.yourownskilltree.backend.cor.Chain
+import repo.IRepoAccessEntity
 import repo.IRepoNode
 
 class NodeProcessor (
-    private val repos: Map<WorkMode, IRepoNode> = mapOf(
+    private val nodeRepos: Map<WorkMode, IRepoNode> = mapOf(
         WorkMode.STUB to NodeRepoStub(),
+    ),
+    private val accessEntityRepos: Map<WorkMode, IRepoAccessEntity> = mapOf(
+        WorkMode.STUB to AccessEntityRepoStub(),
     ),
 ) {
     private val logger = KotlinLogging.logger {}
@@ -20,16 +24,22 @@ class NodeProcessor (
     suspend fun process(ctx: NodeContext) {
         logger.info { "processing NodeContext with workMode ${ctx.workMode}, stub ${ctx.stubCase} and command ${ctx.command}" }
 
-        val repo = repos[ctx.workMode]
-        if (repo == null) {
-            ctx.addError("repo is null")
+        val nodeRepo = nodeRepos[ctx.workMode]
+        if (nodeRepo == null) {
+            ctx.addError("node repo is null")
+            return
+        }
+
+        val accessEntityRepo = accessEntityRepos[ctx.workMode]
+        if (accessEntityRepo == null) {
+            ctx.addError("accessEntity repo is null")
             return
         }
 
         when (ctx.command) {
             NodeCommand.CREATE -> {
                 Chain<NodeContext>(
-                    CheckPermissions(repo),
+                    CheckPermissions(nodeRepo, accessEntityRepo),
                     Validator(::validateRequest),
                     Validator(::validateName),
                     Validator(::validateBusiness),
@@ -38,7 +48,7 @@ class NodeProcessor (
                     UnsupportedStub(NodeStubs.BAD_ID),
                     UnsupportedStub(NodeStubs.CANNOT_DELETE),
                     StubDbError(),
-                    RepoCreate(repo),
+                    RepoCreate(nodeRepo),
                 ).run(ctx)
             }
             NodeCommand.READ -> {
@@ -49,8 +59,8 @@ class NodeProcessor (
                     StubNotFoundError(),
                     StubBadIdError(),
                     StubDbError(),
-                    RepoRead(repo),
-                    CheckPermissions(repo),
+                    RepoRead(nodeRepo),
+                    CheckPermissions(nodeRepo, accessEntityRepo),
                 ).run(ctx)
             }
             NodeCommand.UPDATE -> {
@@ -66,9 +76,9 @@ class NodeProcessor (
                     StubNotFoundError(),
                     StubBadIdError(),
                     StubDbError(),
-                    RepoRead(repo),
-                    CheckPermissions(repo),
-                    RepoUpdate(repo),
+                    RepoRead(nodeRepo),
+                    CheckPermissions(nodeRepo, accessEntityRepo),
+                    RepoUpdate(nodeRepo),
                 ).run(ctx)
             }
             NodeCommand.DELETE -> {
@@ -81,9 +91,9 @@ class NodeProcessor (
                     StubBadIdError(),
                     StubCannotDeleteError(),
                     StubDbError(),
-                    RepoRead(repo),
-                    CheckPermissions(repo),
-                    RepoDelete(repo),
+                    RepoRead(nodeRepo),
+                    CheckPermissions(nodeRepo, accessEntityRepo),
+                    RepoDelete(nodeRepo),
                 ).run(ctx)
             }
             NodeCommand.SEARCH -> {
@@ -94,8 +104,9 @@ class NodeProcessor (
                     UnsupportedStub(NodeStubs.CANNOT_DELETE),
                     StubNotFoundError(),
                     StubDbError(),
-                    RepoSearch(repo),
-                    CheckPermissions(repo), // потому что в случае поиска у юзера может не быть прав на какие-то из найденных нод
+                    RepoSearch(nodeRepo),
+                    // потому что в случае поиска у юзера может не быть прав на какие-то из найденных нод
+                    CheckPermissions(nodeRepo, accessEntityRepo),
                 ).run(ctx)
             }
             NodeCommand.NONE -> throw Exception("unknown command")
