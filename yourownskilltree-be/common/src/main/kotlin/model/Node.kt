@@ -1,6 +1,6 @@
 package org.aburavov.yourownskilltree.backend.common.model
 
-import permissions.*
+import org.aburavov.yourownskilltree.backend.common.permissions.NodeAccessLevel
 
 open class Node {
     var id: String = ""
@@ -12,8 +12,7 @@ open class Node {
     var progress: Int? = null
     var questions: List<Question>? = null
     var ownerId: String = ""
-    var isPublic: Boolean = false  // флаг публичного доступа
-    var publicAccessLevel: NodeAccessLevel = NodeAccessLevel.GENERAL_READ  // уровень публичного доступа
+    var publicAccessLevel: NodeAccessLevel? = null  // уровень публичного доступа
     var lock: String = ""
     
     fun copy(): Node {
@@ -27,9 +26,16 @@ open class Node {
             node.progress = progress
             node.questions = questions?.toList()
             node.ownerId = ownerId
-            node.isPublic = isPublic
             node.publicAccessLevel = publicAccessLevel
             node.lock = lock
+        }
+    }
+
+    fun cleanSensitiveData () {
+        questions?.forEach{
+            if (it.rightAnswer != "") {
+                it.rightAnswer = ""
+            }
         }
     }
 }

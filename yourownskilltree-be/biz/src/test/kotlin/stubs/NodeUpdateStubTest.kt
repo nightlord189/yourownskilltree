@@ -3,6 +3,7 @@ package stubs
 import kotlinx.coroutines.runBlocking
 import org.aburavov.yourownskilltree.backend.biz.NodeProcessor
 import org.aburavov.yourownskilltree.backend.common.model.*
+import org.aburavov.yourownskilltree.backend.common.permissions.UserGroup
 import org.aburavov.yourownskilltree.backend.stubs.NodeRepoStub
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -24,6 +25,8 @@ class NodeUpdateStubTest {
                 status = NodeStatus.COMPLETED
                 lock = "lock1"
             }
+            userId = "1"
+            userGroup = UserGroup.ADMIN
         }
 
         processor.process(context)
@@ -47,6 +50,8 @@ class NodeUpdateStubTest {
                 status = NodeStatus.COMPLETED
                 lock = "lock1"
             }
+            userId = "1"
+            userGroup = UserGroup.ADMIN
         }
 
         processor.process(context)
@@ -69,6 +74,8 @@ class NodeUpdateStubTest {
                 status = NodeStatus.COMPLETED
                 lock = "lock1"
             }
+            userId = "1"
+            userGroup = UserGroup.ADMIN
         }
 
         processor.process(context)
@@ -91,6 +98,8 @@ class NodeUpdateStubTest {
                 status = NodeStatus.COMPLETED
                 lock = "lock1"
             }
+            userId = "1"
+            userGroup = UserGroup.ADMIN
         }
 
         processor.process(context)

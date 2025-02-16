@@ -86,7 +86,7 @@ class RepoSearch (private val repo: IRepoNode): Worker<NodeContext>() {
         val result = repo.searchNode(ctx.nodeFilterRequest?:NodeFilter())
 
         if (result.errors.isEmpty()) {
-            ctx.nodesResponse = result.data
+            ctx.nodesResponse = result.data?.toMutableList()
             return true
         } else {
             ctx.errors.addAll(result.errors)

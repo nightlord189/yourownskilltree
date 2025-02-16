@@ -1,6 +1,14 @@
-package permissions
+package org.aburavov.yourownskilltree.backend.common.permissions
 
-enum class UserGroups {
+enum class Permission {
+    READ,
+    READ_FULL,
+    CREATE,
+    UPDATE,
+    DELETE
+} // пермишены по отношению к конкретной ноде
+
+enum class UserGroup {
     ADMIN,        // администратор (поддержка)
     USER,         // обычный пользователь
     GUEST,        // гость

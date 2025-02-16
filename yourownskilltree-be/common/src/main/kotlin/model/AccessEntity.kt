@@ -1,11 +1,11 @@
 package model
 
-import permissions.NodeAccessLevel
+import org.aburavov.yourownskilltree.backend.common.permissions.NodeAccessLevel
 import java.time.LocalDateTime
 
 data class AccessEntity(
     val userId: String,
     val resourceId: String,
     val accessLevel: NodeAccessLevel,
-    val grantedAt: LocalDateTime
+    val grantedAt: LocalDateTime = LocalDateTime.now()
 )

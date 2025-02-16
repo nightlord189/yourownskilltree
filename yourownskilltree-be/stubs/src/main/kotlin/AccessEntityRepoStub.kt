@@ -1,12 +1,11 @@
 package org.aburavov.yourownskilltree.backend.stubs
 
 import model.AccessEntity
-import permissions.NodeAccessLevel
+import org.aburavov.yourownskilltree.backend.common.permissions.NodeAccessLevel
 import repo.DbAccessEntityResponse
 import repo.DbResponse
 import repo.IRepoAccessEntity
 import java.time.LocalDateTime
-import java.util.*
 
 class AccessEntityRepoStub: IRepoAccessEntity {
     override suspend fun put(item: AccessEntity): DbResponse<AccessEntity> {
@@ -26,6 +25,4 @@ class AccessEntityRepoStub: IRepoAccessEntity {
     override suspend fun delete(userId: String, resourceId: String): DbResponse<AccessEntity> {
         return DbAccessEntityResponse()
     }
-
-
 }

@@ -8,6 +8,7 @@ import org.aburavov.yourownskilltree.backend.common.model.WorkMode
 import org.aburavov.yourownskilltree.backend.common.model.QuestionType as DomainQuestionType
 import org.aburavov.yourownskilltree.backend.common.model.Question as DomainQuestion
 import org.aburavov.yourownskilltree.backend.common.model.Node as DomainNode
+import org.aburavov.yourownskilltree.backend.common.permissions.NodeAccessLevel as DomainNodeAccessLevel
 import org.aburavov.yourownskilltree.backend.common.model.NodeStatus as DomainNodeStatus
 import org.aburavov.yourownskilltree.backend.common.model.NodeCompletionType as DomainNodeCompletionType
 import org.aburavov.yourownskilltree.backend.common.model.NodeFilter as DomainNodeFilter
@@ -111,6 +112,12 @@ fun Node.toDomain(): DomainNode {
         parentIds = this@toDomain.parentIds ?: emptyList()
         progress = this@toDomain.progress
         questions = this@toDomain.questions?.map { it.toDomain() }
+        publicAccessLevel = when(this@toDomain.publicAccessLevel) {
+            Node.PublicAccessLevel.GENERAL_READ -> DomainNodeAccessLevel.GENERAL_READ
+            Node.PublicAccessLevel.FULL_READ ->DomainNodeAccessLevel.FULL_READ
+            Node.PublicAccessLevel.FULL_ACCESS -> DomainNodeAccessLevel.FULL_ACCESS
+            null -> null
+        }
         lock = this@toDomain.lock?:""
     }
 }

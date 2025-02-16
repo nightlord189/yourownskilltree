@@ -6,6 +6,7 @@ import org.aburavov.yourownskilltree.backend.common.model.NodeCommand
 import org.aburavov.yourownskilltree.backend.common.model.NodeContext
 import org.aburavov.yourownskilltree.backend.common.model.NodeStubs
 import org.aburavov.yourownskilltree.backend.common.model.WorkMode
+import org.aburavov.yourownskilltree.backend.common.permissions.UserGroup
 import org.aburavov.yourownskilltree.backend.stubs.NodeRepoStub
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -23,6 +24,8 @@ class NodeDeleteStubTest {
             stubCase = NodeStubs.SUCCESS
             nodeIdRequest = "id1"
             nodeLock = "lock1"
+            userId = "1"
+            userGroup = UserGroup.ADMIN
         }
 
         processor.process(context)
@@ -44,6 +47,8 @@ class NodeDeleteStubTest {
             stubCase= NodeStubs.NOT_FOUND
             nodeIdRequest = "id1"
             nodeLock = "lock1"
+            userId = "1"
+            userGroup = UserGroup.ADMIN
         }
 
         processor.process(context)
@@ -62,6 +67,8 @@ class NodeDeleteStubTest {
             stubCase= NodeStubs.BAD_ID
             nodeIdRequest = "id1"
             nodeLock = "lock1"
+            userId = "1"
+            userGroup = UserGroup.ADMIN
         }
 
         processor.process(context)
@@ -80,6 +87,8 @@ class NodeDeleteStubTest {
             stubCase= NodeStubs.CANNOT_DELETE
             nodeIdRequest = "id1"
             nodeLock = "lock1"
+            userId = "1"
+            userGroup = UserGroup.ADMIN
         }
 
         processor.process(context)
@@ -98,6 +107,8 @@ class NodeDeleteStubTest {
             stubCase= NodeStubs.DB_ERROR
             nodeIdRequest = "id1"
             nodeLock = "lock1"
+            userId = "1"
+            userGroup = UserGroup.ADMIN
         }
 
         processor.process(context)

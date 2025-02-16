@@ -1,6 +1,7 @@
 package org.aburavov.yourownskilltree.backend.biz
 
 import mu.KotlinLogging
+import org.aburavov.yourownskilltree.backend.biz.auth.CalculatePermissions
 import org.aburavov.yourownskilltree.backend.biz.auth.CheckIsAuthorized
 import org.aburavov.yourownskilltree.backend.biz.auth.CheckPermissions
 import org.aburavov.yourownskilltree.backend.stubs.*
@@ -39,7 +40,8 @@ class NodeProcessor (
         when (ctx.command) {
             NodeCommand.CREATE -> {
                 Chain<NodeContext>(
-                    CheckPermissions(nodeRepo, accessEntityRepo),
+                    CalculatePermissions(accessEntityRepo),
+                    CheckPermissions(accessEntityRepo),
                     Validator(::validateRequest),
                     Validator(::validateName),
                     Validator(::validateBusiness),
@@ -60,7 +62,8 @@ class NodeProcessor (
                     StubBadIdError(),
                     StubDbError(),
                     RepoRead(nodeRepo),
-                    CheckPermissions(nodeRepo, accessEntityRepo),
+                    CalculatePermissions(accessEntityRepo),
+                    CheckPermissions(accessEntityRepo),
                 ).run(ctx)
             }
             NodeCommand.UPDATE -> {
@@ -77,7 +80,8 @@ class NodeProcessor (
                     StubBadIdError(),
                     StubDbError(),
                     RepoRead(nodeRepo),
-                    CheckPermissions(nodeRepo, accessEntityRepo),
+                    CalculatePermissions(accessEntityRepo),
+                    CheckPermissions(accessEntityRepo),
                     RepoUpdate(nodeRepo),
                 ).run(ctx)
             }
@@ -92,7 +96,8 @@ class NodeProcessor (
                     StubCannotDeleteError(),
                     StubDbError(),
                     RepoRead(nodeRepo),
-                    CheckPermissions(nodeRepo, accessEntityRepo),
+                    CalculatePermissions(accessEntityRepo),
+                    CheckPermissions(accessEntityRepo),
                     RepoDelete(nodeRepo),
                 ).run(ctx)
             }
@@ -105,8 +110,8 @@ class NodeProcessor (
                     StubNotFoundError(),
                     StubDbError(),
                     RepoSearch(nodeRepo),
-                    // потому что в случае поиска у юзера может не быть прав на какие-то из найденных нод
-                    CheckPermissions(nodeRepo, accessEntityRepo),
+                    CalculatePermissions(accessEntityRepo),
+                    CheckPermissions(accessEntityRepo),
                 ).run(ctx)
             }
             NodeCommand.NONE -> throw Exception("unknown command")
