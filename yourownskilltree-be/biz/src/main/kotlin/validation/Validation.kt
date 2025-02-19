@@ -81,16 +81,3 @@ class Validator(
         return handleFn(ctx)
     }
 }
-
-/**
- * Прерывает обработку, если есть хоть одна ошибка валидации
- */
-class ValidatorFinish(): Worker<NodeContext>() {
-    override suspend fun on(ctx: NodeContext): Boolean {
-        return true
-    }
-
-    override suspend fun handle(ctx: NodeContext): Boolean {
-        return ctx.errors.isEmpty()
-    }
-}

@@ -17,24 +17,26 @@ class RepoCreate (private val repo: IRepoNode): Worker<NodeContext>() {
             ctx.nodeResponse = result.data
             return true
         } else {
+            ctx.nodeResponse = null
             ctx.errors.addAll(result.errors)
             return false
         }
     }
 }
 
-class RepoRead (private val repo: IRepoNode): Worker<NodeContext>() {
+class RepoRead (private val repo: IRepoNode, private val nodeId: String): Worker<NodeContext>() {
     override suspend fun on(ctx: NodeContext): Boolean {
-        return ctx.command == NodeCommand.READ
+        return true
     }
 
     override suspend fun handle(ctx: NodeContext): Boolean {
-        val result = repo.readNode(ctx.nodeIdRequest?:"")
+        val result = repo.readNode(nodeId)
 
         if (result.errors.isEmpty()) {
             ctx.nodeResponse = result.data
             return true
         } else {
+            ctx.nodeResponse = null
             ctx.errors.addAll(result.errors)
             return false
         }
@@ -47,12 +49,14 @@ class RepoUpdate (private val repo: IRepoNode): Worker<NodeContext>() {
     }
 
     override suspend fun handle(ctx: NodeContext): Boolean {
+        ctx.nodeRequest?.ownerId = ctx.nodeResponse?.ownerId?:""
         val result = repo.updateNode(ctx.nodeRequest?:Node())
 
         if (result.errors.isEmpty()) {
             ctx.nodeResponse = result.data
             return true
         } else {
+            ctx.nodeResponse = null
             ctx.errors.addAll(result.errors)
             return false
         }
@@ -71,6 +75,7 @@ class RepoDelete (private val repo: IRepoNode): Worker<NodeContext>() {
             ctx.nodeResponse = result.data
             return true
         } else {
+            ctx.nodeResponse = null
             ctx.errors.addAll(result.errors)
             return false
         }
@@ -89,6 +94,7 @@ class RepoSearch (private val repo: IRepoNode): Worker<NodeContext>() {
             ctx.nodesResponse = result.data?.toMutableList()
             return true
         } else {
+            ctx.nodesResponse = null
             ctx.errors.addAll(result.errors)
             return false
         }

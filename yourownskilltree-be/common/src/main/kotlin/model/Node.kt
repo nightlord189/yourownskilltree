@@ -34,7 +34,7 @@ open class Node {
     fun cleanSensitiveData () {
         questions?.forEach{
             if (it.rightAnswer != "") {
-                it.rightAnswer = ""
+                it.rightAnswer = null
             }
         }
     }

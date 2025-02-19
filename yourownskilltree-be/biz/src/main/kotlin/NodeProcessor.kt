@@ -42,10 +42,11 @@ class NodeProcessor (
                 Chain<NodeContext>(
                     CalculatePermissions(accessEntityRepo),
                     CheckPermissions(accessEntityRepo),
+                    ChainErrorsStopper(),
                     Validator(::validateRequest),
                     Validator(::validateName),
                     Validator(::validateBusiness),
-                    ValidatorFinish(),
+                    ChainErrorsStopper(),
                     UnsupportedStub(NodeStubs.NOT_FOUND),
                     UnsupportedStub(NodeStubs.BAD_ID),
                     UnsupportedStub(NodeStubs.CANNOT_DELETE),
@@ -56,14 +57,15 @@ class NodeProcessor (
             NodeCommand.READ -> {
                 Chain<NodeContext>(
                     Validator(::validateIdRequest),
-                    ValidatorFinish(),
+                    ChainErrorsStopper(),
                     UnsupportedStub(NodeStubs.CANNOT_DELETE),
                     StubNotFoundError(),
                     StubBadIdError(),
                     StubDbError(),
-                    RepoRead(nodeRepo),
+                    RepoRead(nodeRepo, ctx.nodeIdRequest?:""),
                     CalculatePermissions(accessEntityRepo),
                     CheckPermissions(accessEntityRepo),
+                    ChainErrorsStopper(),
                 ).run(ctx)
             }
             NodeCommand.UPDATE -> {
@@ -74,14 +76,15 @@ class NodeProcessor (
                     Validator(::validateName),
                     Validator(::validateBusiness),
                     Validator(::validateLock),
-                    ValidatorFinish(),
+                    ChainErrorsStopper(),
                     UnsupportedStub(NodeStubs.CANNOT_DELETE),
                     StubNotFoundError(),
                     StubBadIdError(),
                     StubDbError(),
-                    RepoRead(nodeRepo),
+                    RepoRead(nodeRepo, ctx.nodeRequest?.id ?: ""),
                     CalculatePermissions(accessEntityRepo),
                     CheckPermissions(accessEntityRepo),
+                    ChainErrorsStopper(),
                     RepoUpdate(nodeRepo),
                 ).run(ctx)
             }
@@ -90,21 +93,22 @@ class NodeProcessor (
                     CheckIsAuthorized(),
                     Validator(::validateIdRequest),
                     Validator(::validateLockRequest),
-                    ValidatorFinish(),
+                    ChainErrorsStopper(),
                     StubNotFoundError(),
                     StubBadIdError(),
                     StubCannotDeleteError(),
                     StubDbError(),
-                    RepoRead(nodeRepo),
+                    RepoRead(nodeRepo, ctx.nodeIdRequest?:""),
                     CalculatePermissions(accessEntityRepo),
                     CheckPermissions(accessEntityRepo),
+                    ChainErrorsStopper(),
                     RepoDelete(nodeRepo),
                 ).run(ctx)
             }
             NodeCommand.SEARCH -> {
                 Chain<NodeContext>(
                     Validator(::validateFilter),
-                    ValidatorFinish(),
+                    ChainErrorsStopper(),
                     UnsupportedStub(NodeStubs.BAD_ID),
                     UnsupportedStub(NodeStubs.CANNOT_DELETE),
                     StubNotFoundError(),
@@ -112,6 +116,7 @@ class NodeProcessor (
                     RepoSearch(nodeRepo),
                     CalculatePermissions(accessEntityRepo),
                     CheckPermissions(accessEntityRepo),
+                    ChainErrorsStopper(),
                 ).run(ctx)
             }
             NodeCommand.NONE -> throw Exception("unknown command")

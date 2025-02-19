@@ -22,12 +22,18 @@ class NodeController (
 
     suspend fun process (request: IRequest, headers: HttpHeaders): IResponse {
         logger.info { "New request: ${request.requestType}" }
-        val principal = decodeJwt(headers[AUTH_HEADER]?.firstOrNull()?:"")
+
+        val authHeader = headers[AUTH_HEADER]?.firstOrNull()?:""
+        val principal = decodeJwt(authHeader)
+        logger.info { "Principal parsed: $principal of header $authHeader" }
+
         val ctx = NodeContext()
+        ctx.fromTransport(request)
         ctx.userId = principal.userId
         ctx.userGroup = principal.userGroup
-        ctx.fromTransport(request)
+
         nodeProcessor.process(ctx)
+
         return ctx.toTransportNode()
     }
 

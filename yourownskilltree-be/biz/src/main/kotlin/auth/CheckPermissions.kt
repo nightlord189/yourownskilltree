@@ -16,7 +16,10 @@ class CheckIsAuthorized() : Worker<NodeContext>() {
     override suspend fun on(ctx: NodeContext) = true
 
     override suspend fun handle(ctx: NodeContext): Boolean {
-        return ctx.userId != null && ctx.userGroup != UserGroup.GUEST
+        if (ctx.userGroup == UserGroup.GUEST) {
+            ctx.addError("user must be authorized")
+        }
+        return true
     }
 }
 
@@ -30,14 +33,22 @@ class CheckPermissions(
         if (!res) {
             ctx.addError("access denied")
         }
-        return res
+        return true
     }
 
     private suspend fun checkCommand (ctx: NodeContext): Boolean {
         when (ctx.command) {
             NodeCommand.NONE -> return true
             NodeCommand.CREATE -> return ctx.permissions.contains(Permission.CREATE)
-            NodeCommand.READ -> return ctx.permissions.contains(Permission.READ) || ctx.permissions.contains(Permission.READ_FULL)
+            NodeCommand.READ -> {
+                if (!ctx.permissions.contains(Permission.READ) && !ctx.permissions.contains(Permission.READ_FULL)) {
+                    return false
+                }
+                if (!ctx.permissions.contains(Permission.READ_FULL)) {
+                    ctx.nodeResponse?.cleanSensitiveData()
+                }
+                return true
+            }
             NodeCommand.UPDATE -> return ctx.permissions.contains(Permission.UPDATE)
             NodeCommand.DELETE -> return ctx.permissions.contains(Permission.DELETE)
             NodeCommand.SEARCH ->  {
@@ -46,7 +57,7 @@ class CheckPermissions(
                     val node = iterator.next()
                     val accessResp = accessEntityRepo.read(ctx.userId ?: "", node.id)
                     val permissions = getPermissionsToSingleNode(ctx.userId, ctx.userGroup, node, accessResp.data)
-                    if (!(permissions.contains(Permission.READ) || permissions.contains(Permission.READ_FULL))) {
+                    if (!permissions.contains(Permission.READ) && !permissions.contains(Permission.READ_FULL)) {
                         iterator.remove()  // удаляем элемент, если у пользователя нет прав на чтение
                     } else {
                         if (!permissions.contains(Permission.READ_FULL)) {
