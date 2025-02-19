@@ -98,8 +98,7 @@ class CalculatePermissions(
     }
 }
 
-
-public suspend fun getPermissionsToSingleNode (userId: String?, userGroup: UserGroup, node: Node?, accessEntity: AccessEntity?): Set<Permission> {
+fun getPermissionsToSingleNode (userId: String?, userGroup: UserGroup, node: Node?, accessEntity: AccessEntity?): Set<Permission> {
     // админ может делать все
     if (userGroup == UserGroup.ADMIN) {
         return fullPermissions
@@ -121,7 +120,9 @@ public suspend fun getPermissionsToSingleNode (userId: String?, userGroup: UserG
     // есть разрешение в базе
     if (accessEntity != null) {
         when (accessEntity.accessLevel) {
-            NodeAccessLevel.FULL_ACCESS -> permissionsSet.addAll(fullPermissions)
+            NodeAccessLevel.FULL_ACCESS -> {
+                return fullPermissions
+            }
             NodeAccessLevel.FULL_READ -> {
                 permissionsSet.add(Permission.READ)
                 permissionsSet.add(Permission.READ_FULL)

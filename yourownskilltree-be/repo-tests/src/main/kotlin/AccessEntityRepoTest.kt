@@ -20,7 +20,6 @@ abstract class AccessEntityRepoTest {
         userId = userId,
         resourceId = resourceId,
         accessLevel = accessLevel,
-        grantedAt = LocalDateTime.now(),
     )
 
     @Test
@@ -49,7 +48,6 @@ abstract class AccessEntityRepoTest {
         assertTrue { result.errors.isEmpty() }
         assertNotNull(result.data)
         assertEquals(NodeAccessLevel.FULL_ACCESS, result.data?.accessLevel)
-        result.data?.grantedAt?.let { assertTrue(it.isBefore(LocalDateTime.now())) }
     }
 
 

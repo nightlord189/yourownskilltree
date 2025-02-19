@@ -17,7 +17,6 @@ class AccessEntityRepoStub: IRepoAccessEntity {
             userId = userId,
             resourceId =  resourceId,
             accessLevel = NodeAccessLevel.FULL_ACCESS,
-            grantedAt = LocalDateTime.now(),
         )
         return DbAccessEntityResponse(data = result)
     }
