@@ -1,6 +1,6 @@
-package repo
+package org.aburavov.yourownskilltree.backend.common.repo
 
-import model.AccessEntity
+import org.aburavov.yourownskilltree.backend.common.model.AccessEntity
 
 interface IRepoAccessEntity {
     suspend fun put(item: AccessEntity): DbResponse<AccessEntity>

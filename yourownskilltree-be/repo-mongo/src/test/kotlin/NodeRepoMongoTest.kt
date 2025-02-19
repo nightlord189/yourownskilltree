@@ -1,5 +1,6 @@
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
+import org.aburavov.yourownskilltree.backend.common.repo.IRepoNode
 import org.aburavov.yourownskilltree.backend.repo.mongo.MongoConfig
 import org.aburavov.yourownskilltree.backend.repo.mongo.NodeRepoMongo
 import org.junit.jupiter.api.AfterEach
@@ -8,7 +9,6 @@ import org.testcontainers.containers.MongoDBContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import org.testcontainers.utility.DockerImageName
-import repo.IRepoNode
 
 @Testcontainers
 class NodeRepoMongoTest:  NodeRepoTest() {

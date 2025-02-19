@@ -8,9 +8,9 @@ import org.aburavov.yourownskilltree.backend.stubs.*
 import org.aburavov.yourownskilltree.backend.biz.repo.*
 import org.aburavov.yourownskilltree.backend.biz.validation.*
 import org.aburavov.yourownskilltree.backend.common.model.*
+import org.aburavov.yourownskilltree.backend.common.repo.IRepoAccessEntity
+import org.aburavov.yourownskilltree.backend.common.repo.IRepoNode
 import org.aburavov.yourownskilltree.backend.cor.Chain
-import repo.IRepoAccessEntity
-import repo.IRepoNode
 
 class NodeProcessor (
     private val nodeRepos: Map<WorkMode, IRepoNode> = mapOf(

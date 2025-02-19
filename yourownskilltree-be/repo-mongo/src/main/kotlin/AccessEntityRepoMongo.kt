@@ -2,12 +2,12 @@ package org.aburavov.yourownskilltree.backend.repo.mongo
 
 import com.mongodb.client.model.Filters
 import kotlinx.coroutines.flow.firstOrNull
-import model.AccessEntity
+import org.aburavov.yourownskilltree.backend.common.model.AccessEntity
 import org.aburavov.yourownskilltree.backend.common.model.CommonError
+import org.aburavov.yourownskilltree.backend.common.repo.DbAccessEntityResponse
+import org.aburavov.yourownskilltree.backend.common.repo.DbResponse
+import org.aburavov.yourownskilltree.backend.common.repo.IRepoAccessEntity
 import org.bson.types.ObjectId
-import repo.DbAccessEntityResponse
-import repo.DbResponse
-import repo.IRepoAccessEntity
 
 class AccessEntityRepoMongo (
     config: MongoConfig,

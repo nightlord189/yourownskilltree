@@ -1,14 +1,14 @@
 package org.aburavov.yourownskilltree.backend.biz.auth
 
-import model.AccessEntity
+import org.aburavov.yourownskilltree.backend.common.model.AccessEntity
 import org.aburavov.yourownskilltree.backend.common.model.Node
 import org.aburavov.yourownskilltree.backend.common.model.NodeCommand
 import org.aburavov.yourownskilltree.backend.common.model.NodeContext
 import org.aburavov.yourownskilltree.backend.common.permissions.NodeAccessLevel
 import org.aburavov.yourownskilltree.backend.common.permissions.Permission
 import org.aburavov.yourownskilltree.backend.common.permissions.UserGroup
+import org.aburavov.yourownskilltree.backend.common.repo.IRepoAccessEntity
 import org.aburavov.yourownskilltree.backend.cor.Worker
-import repo.IRepoAccessEntity
 
 val fullPermissions = setOf(Permission.READ, Permission.READ_FULL, Permission.CREATE, Permission.UPDATE, Permission.DELETE);
 
@@ -26,6 +26,14 @@ class CheckPermissions(
     override suspend fun on(ctx: NodeContext) = true
 
     override suspend fun handle(ctx: NodeContext): Boolean {
+        val res = checkCommand(ctx)
+        if (!res) {
+            ctx.addError("access denied")
+        }
+        return res
+    }
+
+    private suspend fun checkCommand (ctx: NodeContext): Boolean {
         when (ctx.command) {
             NodeCommand.NONE -> return true
             NodeCommand.CREATE -> return ctx.permissions.contains(Permission.CREATE)

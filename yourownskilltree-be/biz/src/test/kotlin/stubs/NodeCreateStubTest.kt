@@ -2,6 +2,7 @@ package org.aburavov.yourownskilltree.backend.biz
 
 import kotlinx.coroutines.runBlocking
 import org.aburavov.yourownskilltree.backend.common.model.*
+import org.aburavov.yourownskilltree.backend.common.permissions.UserGroup
 import org.aburavov.yourownskilltree.backend.stubs.NodeRepoStub
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
@@ -20,6 +21,8 @@ class NodeCreateStubTest {
             nodeRequest = Node().apply {
                 name = "Node 1"
             }
+            userId = "1"
+            userGroup = UserGroup.ADMIN
         }
 
         processor.process(context)

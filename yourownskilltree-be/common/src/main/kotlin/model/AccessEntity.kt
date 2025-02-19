@@ -1,4 +1,4 @@
-package model
+package org.aburavov.yourownskilltree.backend.common.model
 
 import org.aburavov.yourownskilltree.backend.common.permissions.NodeAccessLevel
 import java.time.LocalDateTime

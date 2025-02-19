@@ -1,12 +1,11 @@
 import kotlinx.coroutines.runBlocking
-import model.AccessEntity
+import org.aburavov.yourownskilltree.backend.common.model.AccessEntity
 import org.aburavov.yourownskilltree.backend.common.permissions.NodeAccessLevel
+import org.aburavov.yourownskilltree.backend.common.repo.IRepoAccessEntity
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import repo.IRepoAccessEntity
 import java.time.LocalDateTime
-import java.util.*
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 

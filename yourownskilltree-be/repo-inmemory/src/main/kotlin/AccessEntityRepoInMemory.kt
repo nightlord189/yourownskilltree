@@ -1,6 +1,7 @@
-import model.AccessEntity
+import org.aburavov.yourownskilltree.backend.common.model.AccessEntity
 import org.aburavov.yourownskilltree.backend.common.model.CommonError
-import repo.*
+import org.aburavov.yourownskilltree.backend.common.repo.DbAccessEntityResponse
+import org.aburavov.yourownskilltree.backend.common.repo.IRepoAccessEntity
 
 class AccessEntityRepoInMemory (existingItems: MutableList<AccessEntity> = mutableListOf()): IRepoAccessEntity {
     private val items: MutableList<AccessEntity> = existingItems

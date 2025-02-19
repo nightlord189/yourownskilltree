@@ -1,9 +1,9 @@
 package permissions
 
 import kotlinx.coroutines.runBlocking
-import model.AccessEntity
 import org.aburavov.yourownskilltree.backend.biz.auth.fullPermissions
 import org.aburavov.yourownskilltree.backend.biz.auth.getPermissionsToSingleNode
+import org.aburavov.yourownskilltree.backend.common.model.AccessEntity
 import org.aburavov.yourownskilltree.backend.common.model.Node
 import org.aburavov.yourownskilltree.backend.common.permissions.NodeAccessLevel
 import org.aburavov.yourownskilltree.backend.common.permissions.Permission

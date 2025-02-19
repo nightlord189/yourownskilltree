@@ -1,4 +1,4 @@
-package repo
+package org.aburavov.yourownskilltree.backend.common.repo
 
 import org.aburavov.yourownskilltree.backend.common.model.Node
 import org.aburavov.yourownskilltree.backend.common.model.NodeFilter

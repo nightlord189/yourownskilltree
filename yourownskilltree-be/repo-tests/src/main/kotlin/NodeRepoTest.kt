@@ -3,9 +3,9 @@ import org.aburavov.yourownskilltree.backend.common.model.Node
 import org.aburavov.yourownskilltree.backend.common.model.NodeCompletionType
 import org.aburavov.yourownskilltree.backend.common.model.NodeFilter
 import org.aburavov.yourownskilltree.backend.common.model.NodeStatus
+import org.aburavov.yourownskilltree.backend.common.repo.IRepoNode
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
-import repo.IRepoNode
 import java.util.UUID
 import kotlin.test.assertNotNull
 

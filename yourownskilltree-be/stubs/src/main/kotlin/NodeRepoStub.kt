@@ -4,7 +4,9 @@ import org.aburavov.yourownskilltree.backend.common.model.Node
 import org.aburavov.yourownskilltree.backend.common.model.NodeCompletionType
 import org.aburavov.yourownskilltree.backend.common.model.NodeFilter
 import org.aburavov.yourownskilltree.backend.common.model.NodeStatus
-import repo.*
+import org.aburavov.yourownskilltree.backend.common.repo.DbNodeResponse
+import org.aburavov.yourownskilltree.backend.common.repo.DbNodesResponse
+import org.aburavov.yourownskilltree.backend.common.repo.IRepoNode
 import java.util.*
 
 class NodeRepoStub: IRepoNode {

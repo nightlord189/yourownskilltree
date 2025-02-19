@@ -1,10 +1,10 @@
 package org.aburavov.yourownskilltree.backend.stubs
 
-import model.AccessEntity
+import org.aburavov.yourownskilltree.backend.common.model.AccessEntity
 import org.aburavov.yourownskilltree.backend.common.permissions.NodeAccessLevel
-import repo.DbAccessEntityResponse
-import repo.DbResponse
-import repo.IRepoAccessEntity
+import org.aburavov.yourownskilltree.backend.common.repo.DbAccessEntityResponse
+import org.aburavov.yourownskilltree.backend.common.repo.DbResponse
+import org.aburavov.yourownskilltree.backend.common.repo.IRepoAccessEntity
 import java.time.LocalDateTime
 
 class AccessEntityRepoStub: IRepoAccessEntity {

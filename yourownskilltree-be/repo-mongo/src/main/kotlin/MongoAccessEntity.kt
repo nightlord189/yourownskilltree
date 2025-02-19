@@ -1,6 +1,6 @@
 package org.aburavov.yourownskilltree.backend.repo.mongo
 
-import model.AccessEntity
+import org.aburavov.yourownskilltree.backend.common.model.AccessEntity
 import org.aburavov.yourownskilltree.backend.common.permissions.NodeAccessLevel
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.codecs.pojo.annotations.BsonProperty
