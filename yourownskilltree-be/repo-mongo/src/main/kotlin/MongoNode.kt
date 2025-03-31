@@ -1,6 +1,7 @@
 package org.aburavov.yourownskilltree.backend.repo.mongo
 
 import org.aburavov.yourownskilltree.backend.common.model.*
+import org.aburavov.yourownskilltree.backend.common.permissions.NodeAccessLevel
 import org.bson.types.ObjectId
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.codecs.pojo.annotations.BsonProperty
@@ -17,6 +18,8 @@ data class MongoNode(
     val parentIds: List<String>,
     val progress: Int?,
     val questions: List<MongoQuestion>?,
+    val ownerId: String,
+    val publicAccessLevel: NodeAccessLevel?,
     var lock: String
 ) {
     companion object {
@@ -29,6 +32,8 @@ data class MongoNode(
             parentIds = node.parentIds,
             progress = node.progress,
             questions = node.questions?.map { MongoQuestion.fromCommon(it) },
+            ownerId = node.ownerId,
+            publicAccessLevel = node.publicAccessLevel,
             lock = node.lock
         )
     }
@@ -42,6 +47,8 @@ data class MongoNode(
         node.parentIds = parentIds
         node.progress = progress
         node.questions = questions?.map { it.toCommon() }
+        node.ownerId = ownerId
+        node.publicAccessLevel = publicAccessLevel
         node.lock = lock
     }
 }

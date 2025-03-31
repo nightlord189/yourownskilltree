@@ -1,8 +1,8 @@
 package org.aburavov.yourownskilltree.backend.biz.repo
 
 import org.aburavov.yourownskilltree.backend.common.model.*
+import org.aburavov.yourownskilltree.backend.common.repo.IRepoNode
 import org.aburavov.yourownskilltree.backend.cor.Worker
-import repo.*
 
 class RepoCreate (private val repo: IRepoNode): Worker<NodeContext>() {
     override suspend fun on(ctx: NodeContext): Boolean {
@@ -10,36 +10,35 @@ class RepoCreate (private val repo: IRepoNode): Worker<NodeContext>() {
     }
 
     override suspend fun handle(ctx: NodeContext): Boolean {
+        ctx.nodeRequest?.ownerId = ctx.userId ?: ""
         val result = repo.createNode(ctx.nodeRequest?: Node())
-        when (result) {
-            is DbNodeResponseOk -> {
-                ctx.nodeResponse = result.data
-                return true
-            }
-            is DbNodeResponseErr -> {
-                ctx.errors.addAll(result.errors)
-                return false
-            }
+
+        if (result.errors.isEmpty()) {
+            ctx.nodeResponse = result.data
+            return true
+        } else {
+            ctx.nodeResponse = null
+            ctx.errors.addAll(result.errors)
+            return false
         }
     }
 }
 
-class RepoRead (private val repo: IRepoNode): Worker<NodeContext>() {
+class RepoRead (private val repo: IRepoNode, private val nodeId: String): Worker<NodeContext>() {
     override suspend fun on(ctx: NodeContext): Boolean {
-        return ctx.command == NodeCommand.READ
+        return true
     }
 
     override suspend fun handle(ctx: NodeContext): Boolean {
-        val result = repo.readNode(ctx.nodeIdRequest?:"")
-        when (result) {
-            is DbNodeResponseOk -> {
-                ctx.nodeResponse = result.data
-                return true
-            }
-            is DbNodeResponseErr -> {
-                ctx.errors.addAll(result.errors)
-                return false
-            }
+        val result = repo.readNode(nodeId)
+
+        if (result.errors.isEmpty()) {
+            ctx.nodeResponse = result.data
+            return true
+        } else {
+            ctx.nodeResponse = null
+            ctx.errors.addAll(result.errors)
+            return false
         }
     }
 }
@@ -50,16 +49,16 @@ class RepoUpdate (private val repo: IRepoNode): Worker<NodeContext>() {
     }
 
     override suspend fun handle(ctx: NodeContext): Boolean {
+        ctx.nodeRequest?.ownerId = ctx.nodeResponse?.ownerId?:""
         val result = repo.updateNode(ctx.nodeRequest?:Node())
-        when (result) {
-            is DbNodeResponseOk -> {
-                ctx.nodeResponse = result.data
-                return true
-            }
-            is DbNodeResponseErr -> {
-                ctx.errors.addAll(result.errors)
-                return false
-            }
+
+        if (result.errors.isEmpty()) {
+            ctx.nodeResponse = result.data
+            return true
+        } else {
+            ctx.nodeResponse = null
+            ctx.errors.addAll(result.errors)
+            return false
         }
     }
 }
@@ -71,15 +70,14 @@ class RepoDelete (private val repo: IRepoNode): Worker<NodeContext>() {
 
     override suspend fun handle(ctx: NodeContext): Boolean {
         val result = repo.deleteNode(ctx.nodeIdRequest?:"", ctx.nodeLock?:"")
-        when (result) {
-            is DbNodeResponseOk -> {
-                ctx.nodeResponse = result.data
-                return true
-            }
-            is DbNodeResponseErr -> {
-                ctx.errors.addAll(result.errors)
-                return false
-            }
+
+        if (result.errors.isEmpty()) {
+            ctx.nodeResponse = result.data
+            return true
+        } else {
+            ctx.nodeResponse = null
+            ctx.errors.addAll(result.errors)
+            return false
         }
     }
 }
@@ -91,15 +89,14 @@ class RepoSearch (private val repo: IRepoNode): Worker<NodeContext>() {
 
     override suspend fun handle(ctx: NodeContext): Boolean {
         val result = repo.searchNode(ctx.nodeFilterRequest?:NodeFilter())
-        when (result) {
-            is DbNodesResponseOk -> {
-                ctx.nodesResponse = result.data
-                return true
-            }
-            is DbNodesResponseErr -> {
-                ctx.errors.addAll(result.errors)
-                return false
-            }
+
+        if (result.errors.isEmpty()) {
+            ctx.nodesResponse = result.data?.toMutableList()
+            return true
+        } else {
+            ctx.nodesResponse = null
+            ctx.errors.addAll(result.errors)
+            return false
         }
     }
 }

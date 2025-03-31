@@ -1,5 +1,5 @@
+import org.aburavov.yourownskilltree.backend.common.repo.IRepoNode
 import org.junit.jupiter.api.BeforeEach
-import repo.IRepoNode
 
 class NodeRepoInMemoryTest: NodeRepoTest() {
     override lateinit var repo: IRepoNode

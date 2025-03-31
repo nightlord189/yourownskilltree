@@ -3,6 +3,7 @@ package org.aburavov.yourownskilltree.backend.api.model
 import org.aburavov.yourownskilltree.backend.api.mappers.fromTransport
 import org.aburavov.yourownskilltree.backend.api.mappers.toTransportCreate
 import org.aburavov.yourownskilltree.backend.common.model.*
+import org.aburavov.yourownskilltree.backend.common.permissions.NodeAccessLevel
 import org.aburavov.yourownskilltree.backend.common.model.Node as DomainNode
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -25,6 +26,7 @@ class MappersTest {
                 description = "Test Description",
                 parentIds = listOf("parent1", "parent2"),
                 progress = 75,
+                publicAccessLevel = Node.PublicAccessLevel.GENERAL_READ,
                 questions = listOf(
                     Question(
                         text = "Test Question",
@@ -51,6 +53,7 @@ class MappersTest {
             assertEquals("Test Description",this?.description)
             assertEquals(listOf("parent1", "parent2"), this?.parentIds)
             assertEquals(75, this?.progress)
+            assertEquals(NodeAccessLevel.GENERAL_READ, this?.publicAccessLevel)
 
             // проверяем маппинг вложенных questions
             assertNotNull(this?.questions)
@@ -79,6 +82,7 @@ class MappersTest {
                 description = "desc"
                 completionType = NodeCompletionType.BOOL
                 status = NodeStatus.OPEN
+                publicAccessLevel = NodeAccessLevel.GENERAL_READ
             }
             errors = mutableListOf(
                 CommonError(
@@ -95,6 +99,7 @@ class MappersTest {
         assertEquals("node1", req.node?.name)
         assertEquals("desc", req.node?.description)
         assertEquals("open", req.node?.status?.value)
+        assertEquals("general_read", req.node?.publicAccessLevel?.value)
         assertEquals(1, req.errors?.size)
         assertEquals("err", req.errors?.firstOrNull()?.code)
         assertEquals("request", req.errors?.firstOrNull()?.group)

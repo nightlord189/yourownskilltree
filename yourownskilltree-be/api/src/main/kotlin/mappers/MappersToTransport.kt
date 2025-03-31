@@ -9,6 +9,8 @@ import org.aburavov.yourownskilltree.backend.common.model.Question as DomainQues
 import org.aburavov.yourownskilltree.backend.common.model.CommonError
 import org.aburavov.yourownskilltree.backend.api.model.*
 import org.aburavov.yourownskilltree.backend.common.model.NodeCommand
+import org.aburavov.yourownskilltree.backend.common.model.NodeStatus
+import org.aburavov.yourownskilltree.backend.common.permissions.NodeAccessLevel
 
 fun NodeContext.toTransportNode(): IResponse = when (command) {
     NodeCommand.CREATE -> toTransportCreate()
@@ -68,6 +70,12 @@ fun DomainNode.toTransport(): Node {
             DomainNodeStatus.OPEN -> Node.Status.OPEN
             DomainNodeStatus.IN_PROGRESS -> Node.Status.IN_PROGRESS
             DomainNodeStatus.COMPLETED -> Node.Status.COMPLETED
+        },
+        publicAccessLevel = when(publicAccessLevel) {
+            NodeAccessLevel.FULL_ACCESS -> Node.PublicAccessLevel.FULL_ACCESS
+            NodeAccessLevel.FULL_READ ->  Node.PublicAccessLevel.FULL_READ
+            NodeAccessLevel.GENERAL_READ ->  Node.PublicAccessLevel.GENERAL_READ
+            null -> null
         },
         description = description,
         parentIds = parentIds.takeIf { it.isNotEmpty() },

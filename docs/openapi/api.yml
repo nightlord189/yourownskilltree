@@ -301,7 +301,7 @@ components:
           type: string
         type:
           type: string
-          example: bool
+          example: closed
           enum:
             - open
             - closed
@@ -355,6 +355,13 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Question"
+        public_access_level:
+          type: string
+          example: general_read
+          enum:
+            - general_read
+            - full_read
+            - full_access
       required:
         - id
         - name
